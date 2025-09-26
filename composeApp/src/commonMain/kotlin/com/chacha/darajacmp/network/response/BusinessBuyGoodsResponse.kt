@@ -20,3 +20,4 @@ data class BusinessBuyGoodsResponse(
     @SerialName("errorMessage")
     val errorMessage: String? = null
 )
+

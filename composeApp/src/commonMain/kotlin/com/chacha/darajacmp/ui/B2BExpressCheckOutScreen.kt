@@ -18,16 +18,13 @@ import com.chacha.darajacmp.viewmodel.MpesaViewModel
 fun B2BExpressCheckOutScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
     var clientId by remember { mutableStateOf("xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ") }
     var clientSecret by remember { mutableStateOf("7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg") }
-    var initiator by remember { mutableStateOf("testapi") }
-    var securityCredential by remember { mutableStateOf("safaricom123!@#") } // Replace with actual encrypted credential
-    var commandID by remember { mutableStateOf("B2BExpressCheckOut") }
-    var amount by remember { mutableStateOf("5") }
-    var partyA by remember { mutableStateOf("174379") } // Your business short code
-    var partyB by remember { mutableStateOf("174379") } // Receiving business short code
-    var remarks by remember { mutableStateOf("B2B Express CheckOut Test") }
-    var queueTimeOutURL by remember { mutableStateOf("https://mydomain.com/b2c/queue") }
-    var resultURL by remember { mutableStateOf("https://mydomain.com/b2c/result") }
-    var occasion by remember { mutableStateOf("B2B Payment") }
+    var primaryShortCode by remember { mutableStateOf("000001") }
+    var receiverShortCode by remember { mutableStateOf("000002") }
+    var amount by remember { mutableStateOf("100") }
+    var paymentRef by remember { mutableStateOf("paymentRef") }
+    var callbackUrl by remember { mutableStateOf("http://..../result") }
+    var partnerName by remember { mutableStateOf("Vendor") }
+    var requestRefID by remember { mutableStateOf("100001") }
 
     Column(
         modifier = Modifier
@@ -64,28 +61,21 @@ fun B2BExpressCheckOutScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
         )
 
         OutlinedTextField(
-            value = initiator,
-            onValueChange = { initiator = it },
-            label = { Text("Initiator") },
+            value = primaryShortCode,
+            onValueChange = { primaryShortCode = it },
+            label = { Text("Primary Short Code") },
             modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("The username of the M-Pesa API account") }
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Your business short code (e.g., 000001)") }
         )
 
         OutlinedTextField(
-            value = securityCredential,
-            onValueChange = { securityCredential = it },
-            label = { Text("Security Credential") },
+            value = receiverShortCode,
+            onValueChange = { receiverShortCode = it },
+            label = { Text("Receiver Short Code") },
             modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation(),
-            supportingText = { Text("Encrypted password of the Initiator") }
-        )
-
-        OutlinedTextField(
-            value = commandID,
-            onValueChange = { commandID = it },
-            label = { Text("Command ID") },
-            modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("e.g., B2BExpressCheckOut") }
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Receiving business short code (e.g., 000002)") }
         )
 
         OutlinedTextField(
@@ -93,79 +83,60 @@ fun B2BExpressCheckOutScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
             onValueChange = { amount = it },
             label = { Text("Amount (KES)") },
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Payment amount") }
         )
 
         OutlinedTextField(
-            value = partyA,
-            onValueChange = { partyA = it },
-            label = { Text("Party A (Sending Business Short Code)") },
+            value = paymentRef,
+            onValueChange = { paymentRef = it },
+            label = { Text("Payment Reference") },
             modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("Your business short code") }
+            supportingText = { Text("Payment reference for tracking") }
         )
 
         OutlinedTextField(
-            value = partyB,
-            onValueChange = { partyB = it },
-            label = { Text("Party B (Receiving Business Short Code)") },
+            value = callbackUrl,
+            onValueChange = { callbackUrl = it },
+            label = { Text("Callback URL") },
+            modifier = Modifier.fillMaxWidth(),
+            supportingText = { Text("URL to receive payment result callbacks") }
+        )
+
+        OutlinedTextField(
+            value = partnerName,
+            onValueChange = { partnerName = it },
+            label = { Text("Partner Name") },
+            modifier = Modifier.fillMaxWidth(),
+            supportingText = { Text("Name of the partner/vendor") }
+        )
+
+        OutlinedTextField(
+            value = requestRefID,
+            onValueChange = { requestRefID = it },
+            label = { Text("Request Reference ID") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            supportingText = { Text("The receiving business short code") }
-        )
-
-        OutlinedTextField(
-            value = remarks,
-            onValueChange = { remarks = it },
-            label = { Text("Remarks") },
-            modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("Comments that are sent along with the transaction") }
-        )
-
-        OutlinedTextField(
-            value = queueTimeOutURL,
-            onValueChange = { queueTimeOutURL = it },
-            label = { Text("Queue TimeOut URL") },
-            modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("URL to receive timeout callbacks") }
-        )
-
-        OutlinedTextField(
-            value = resultURL,
-            onValueChange = { resultURL = it },
-            label = { Text("Result URL") },
-            modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("URL to receive transaction result callbacks") }
-        )
-
-        OutlinedTextField(
-            value = occasion,
-            onValueChange = { occasion = it },
-            label = { Text("Occasion") },
-            modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("Optional: reason for the transaction") }
+            supportingText = { Text("Unique identifier for each request") }
         )
 
         Button(
             onClick = {
                 if (clientId.isNotBlank() && clientSecret.isNotBlank() &&
-                    initiator.isNotBlank() && securityCredential.isNotBlank() &&
-                    commandID.isNotBlank() && amount.isNotBlank() &&
-                    partyA.isNotBlank() && partyB.isNotBlank() &&
-                    remarks.isNotBlank() && queueTimeOutURL.isNotBlank() &&
-                    resultURL.isNotBlank() && occasion.isNotBlank()) {
+                    primaryShortCode.isNotBlank() && receiverShortCode.isNotBlank() &&
+                    amount.isNotBlank() && paymentRef.isNotBlank() &&
+                    callbackUrl.isNotBlank() && partnerName.isNotBlank() &&
+                    requestRefID.isNotBlank()) {
                     viewModel.processB2BExpressCheckOut(
                         clientId = clientId,
                         clientSecret = clientSecret,
-                        initiator = initiator,
-                        securityCredential = securityCredential,
-                        commandID = commandID,
-                        amount = amount.toIntOrNull() ?: 0,
-                        partyA = partyA,
-                        partyB = partyB,
-                        remarks = remarks,
-                        queueTimeOutURL = queueTimeOutURL,
-                        resultURL = resultURL,
-                        occasion = occasion
+                        primaryShortCode = primaryShortCode,
+                        receiverShortCode = receiverShortCode,
+                        amount = amount,
+                        paymentRef = paymentRef,
+                        callbackUrl = callbackUrl,
+                        partnerName = partnerName,
+                        requestRefID = requestRefID
                     )
                 }
             },
@@ -248,27 +219,31 @@ fun B2BExpressCheckOutScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "• Party A is your business short code (sending).",
+                    text = "• Primary Short Code: Your business short code for initiating payments",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• Party B is the receiving business short code.",
+                    text = "• Receiver Short Code: The business receiving the payment",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• CommandID for B2B Express CheckOut is typically 'B2BExpressCheckOut'.",
+                    text = "• Payment Reference: Unique identifier for tracking this payment",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• Security Credential must be encrypted using your certificate.",
+                    text = "• Callback URL: Where payment confirmations are sent",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• Results are sent via callback to the Result URL.",
+                    text = "• Partner Name: Name of the vendor/partner receiving payment",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• B2B Express CheckOut enables fast business-to-business payments.",
+                    text = "• Request Reference ID: Unique identifier for each request",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Text(
+                    text = "• B2B Express CheckOut provides instant business-to-business payments",
                     style = MaterialTheme.typography.bodySmall
                 )
             }

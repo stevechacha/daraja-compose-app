@@ -2,9 +2,10 @@ package com.chacha.darajacmp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chacha.darajacmp.models.C2BRegisterRequest
 import com.chacha.darajacmp.network.AuthService
+import com.chacha.darajacmp.network.DarajaApiCallService
 import com.chacha.darajacmp.network.DarajaApiService
-import com.chacha.darajacmp.network.response.*
 import com.chacha.darajacmp.utils.DarajaResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +15,12 @@ import kotlinx.coroutines.launch
 
 class MpesaViewModel : ViewModel() {
     private val authService = AuthService()
-    private val darajaApiService = DarajaApiService(authService)
+    private val  darajaApiCallService = DarajaApiCallService(
+        consumerKey = "xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ",
+        consumerSecret = "7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg"
+    )
+
+    private val darajaApiService = DarajaApiService(authService,darajaApiCallService)
     
     private val _uiState = MutableStateFlow(MpesaUiState())
     val uiState: StateFlow<MpesaUiState> = _uiState.asStateFlow()
@@ -28,8 +34,8 @@ class MpesaViewModel : ViewModel() {
     
     // STK Push - Customer Pay Bill Online
     fun initiateSTKPush(
-        clientId: String,
-        clientSecret: String,
+        clientId: String = "xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ",
+        clientSecret: String = "7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg",
         businessShortCode: String,
         passKey: String,
         amount: Int,
@@ -40,6 +46,7 @@ class MpesaViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+
             
             try {
                 val timestamp = darajaApiService.getTimestamp()
@@ -142,36 +149,29 @@ class MpesaViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
             
-            try {
-                val result = darajaApiService.c2bRegisterURL(
+            val result = darajaApiCallService.c2bRegisterURL(
+                C2BRegisterRequest(
                     shortCode = shortCode,
                     responseType = responseType,
                     confirmationURL = confirmationURL,
-                    validationURL = validationURL,
-                    clientId = clientId,
-                    clientSecret = clientSecret
+                    validationURL = validationURL
                 )
-                
-                when (result) {
-                    is DarajaResult.Success -> {
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            success = "C2B URL registered successfully",
-                            c2bRegisterResponse = result.data
-                        )
-                    }
-                    is DarajaResult.Error -> {
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            error = result.error
-                        )
-                    }
+            )
+            
+            when (result) {
+                is DarajaResult.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        success = "C2B URL registered successfully",
+                        c2bRegisterResponse = result.data
+                    )
                 }
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    error = "Failed to register C2B URL: ${e.message}"
-                )
+                is DarajaResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = result.error
+                    )
+                }
             }
         }
     }
@@ -452,9 +452,9 @@ class MpesaViewModel : ViewModel() {
         securityCredential: String,
         commandID: String,
         transactionID: String,
-        amount: Int,
+        amount: String,
         receiverParty: String,
-        recieverIdentifierType: Int,
+        recieverIdentifierType: String,
         resultURL: String,
         queueTimeOutURL: String,
         remarks: String,
@@ -511,9 +511,12 @@ class MpesaViewModel : ViewModel() {
         initiator: String,
         securityCredential: String,
         commandID: String,
-        amount: Int,
+        senderIdentifierType: String,
+        receiverIdentifierType: String,
+        amount: String,
         partyA: String,
         partyB: String,
+        accountReference: String,
         remarks: String,
         queueTimeOutURL: String,
         resultURL: String,
@@ -527,13 +530,15 @@ class MpesaViewModel : ViewModel() {
                     initiator = initiator,
                     securityCredential = securityCredential,
                     commandID = commandID,
+                    senderIdentifierType = senderIdentifierType,
+                    receiverIdentifierType = receiverIdentifierType,
                     amount = amount,
                     partyA = partyA,
                     partyB = partyB,
+                    accountReference = accountReference,
                     remarks = remarks,
                     queueTimeOutURL = queueTimeOutURL,
                     resultURL = resultURL,
-                    occasion = occasion,
                     clientId = clientId,
                     clientSecret = clientSecret
                 )
@@ -569,9 +574,13 @@ class MpesaViewModel : ViewModel() {
         initiator: String,
         securityCredential: String,
         commandID: String,
-        amount: Int,
+        senderIdentifierType: String,
+        receiverIdentifierType: String,
+        amount: String,
         partyA: String,
         partyB: String,
+        accountReference: String,
+        requester: String,
         remarks: String,
         queueTimeOutURL: String,
         resultURL: String,
@@ -585,13 +594,16 @@ class MpesaViewModel : ViewModel() {
                     initiator = initiator,
                     securityCredential = securityCredential,
                     commandID = commandID,
+                    senderIdentifierType = senderIdentifierType,
+                    receiverIdentifierType = receiverIdentifierType,
                     amount = amount,
                     partyA = partyA,
                     partyB = partyB,
+                    accountReference = accountReference,
+                    requester = requester,
                     remarks = remarks,
                     queueTimeOutURL = queueTimeOutURL,
                     resultURL = resultURL,
-                    occasion = occasion,
                     clientId = clientId,
                     clientSecret = clientSecret
                 )
@@ -626,9 +638,13 @@ class MpesaViewModel : ViewModel() {
         initiator: String,
         securityCredential: String,
         commandID: String,
-        amount: Int,
+        senderIdentifierType: String,
+        receiverIdentifierType: String,
+        amount: String,
         partyA: String,
         partyB: String,
+        accountReference: String,
+        requester: String,
         remarks: String,
         queueTimeOutURL: String,
         resultURL: String,
@@ -642,13 +658,16 @@ class MpesaViewModel : ViewModel() {
                     initiator = initiator,
                     securityCredential = securityCredential,
                     commandID = commandID,
+                    senderIdentifierType = senderIdentifierType,
+                    receiverIdentifierType = receiverIdentifierType,
                     amount = amount,
                     partyA = partyA,
                     partyB = partyB,
+                    accountReference = accountReference,
+                    requester = requester,
                     remarks = remarks,
                     queueTimeOutURL = queueTimeOutURL,
                     resultURL = resultURL,
-                    occasion = occasion,
                     clientId = clientId,
                     clientSecret = clientSecret
                 )
@@ -680,32 +699,24 @@ class MpesaViewModel : ViewModel() {
     fun processBillManager(
         clientId: String,
         clientSecret: String,
-        initiator: String,
-        securityCredential: String,
-        commandID: String,
-        amount: Int,
-        partyA: String,
-        partyB: String,
-        remarks: String,
-        queueTimeOutURL: String,
-        resultURL: String,
-        occasion: String
+        shortcode: String,
+        email: String,
+        officialContact: String,
+        sendReminders: String,
+        logo: String,
+        callbackurl: String
     ) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
             
             try {
                 val result = darajaApiService.billManager(
-                    initiator = initiator,
-                    securityCredential = securityCredential,
-                    commandID = commandID,
-                    amount = amount,
-                    partyA = partyA,
-                    partyB = partyB,
-                    remarks = remarks,
-                    queueTimeOutURL = queueTimeOutURL,
-                    resultURL = resultURL,
-                    occasion = occasion,
+                    shortcode = shortcode,
+                    email = email,
+                    officialContact = officialContact,
+                    sendReminders = sendReminders,
+                    logo = logo,
+                    callbackurl = callbackurl,
                     clientId = clientId,
                     clientSecret = clientSecret
                 )
@@ -737,32 +748,26 @@ class MpesaViewModel : ViewModel() {
     fun processB2BExpressCheckOut(
         clientId: String,
         clientSecret: String,
-        initiator: String,
-        securityCredential: String,
-        commandID: String,
-        amount: Int,
-        partyA: String,
-        partyB: String,
-        remarks: String,
-        queueTimeOutURL: String,
-        resultURL: String,
-        occasion: String
+        primaryShortCode: String,
+        receiverShortCode: String,
+        amount: String,
+        paymentRef: String,
+        callbackUrl: String,
+        partnerName: String,
+        requestRefID: String
     ) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
             
             try {
                 val result = darajaApiService.b2bExpressCheckOut(
-                    initiator = initiator,
-                    securityCredential = securityCredential,
-                    commandID = commandID,
+                    primaryShortCode = primaryShortCode,
+                    receiverShortCode = receiverShortCode,
                     amount = amount,
-                    partyA = partyA,
-                    partyB = partyB,
-                    remarks = remarks,
-                    queueTimeOutURL = queueTimeOutURL,
-                    resultURL = resultURL,
-                    occasion = occasion,
+                    paymentRef = paymentRef,
+                    callbackUrl = callbackUrl,
+                    partnerName = partnerName,
+                    requestRefID = requestRefID,
                     clientId = clientId,
                     clientSecret = clientSecret
                 )
@@ -797,9 +802,13 @@ class MpesaViewModel : ViewModel() {
         initiator: String,
         securityCredential: String,
         commandID: String,
-        amount: Int,
+        senderIdentifierType: String,
+        receiverIdentifierType: String,
+        amount: String,
         partyA: String,
         partyB: String,
+        accountReference: String,
+        requester: String,
         remarks: String,
         queueTimeOutURL: String,
         resultURL: String,
@@ -813,13 +822,16 @@ class MpesaViewModel : ViewModel() {
                     initiator = initiator,
                     securityCredential = securityCredential,
                     commandID = commandID,
+                    senderIdentifierType = senderIdentifierType,
+                    receiverIdentifierType = receiverIdentifierType,
                     amount = amount,
                     partyA = partyA,
                     partyB = partyB,
+                    accountReference = accountReference,
+                    requester = requester,
                     remarks = remarks,
                     queueTimeOutURL = queueTimeOutURL,
                     resultURL = resultURL,
-                    occasion = occasion,
                     clientId = clientId,
                     clientSecret = clientSecret
                 )
@@ -851,32 +863,36 @@ class MpesaViewModel : ViewModel() {
     fun processMpesaRatiba(
         clientId: String,
         clientSecret: String,
-        initiator: String,
-        securityCredential: String,
-        commandID: String,
-        amount: Int,
+        standingOrderName: String,
+        startDate: String,
+        endDate: String,
+        businessShortCode: String,
+        transactionType: String,
+        receiverPartyIdentifierType: String,
+        amount: String,
         partyA: String,
-        partyB: String,
-        remarks: String,
-        queueTimeOutURL: String,
-        resultURL: String,
-        occasion: String
+        callBackURL: String,
+        accountReference: String,
+        transactionDesc: String,
+        frequency: String
     ) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
             
             try {
                 val result = darajaApiService.mpesaRatiba(
-                    initiator = initiator,
-                    securityCredential = securityCredential,
-                    commandID = commandID,
+                    standingOrderName = standingOrderName,
+                    startDate = startDate,
+                    endDate = endDate,
+                    businessShortCode = businessShortCode,
+                    transactionType = transactionType,
+                    receiverPartyIdentifierType = receiverPartyIdentifierType,
                     amount = amount,
                     partyA = partyA,
-                    partyB = partyB,
-                    remarks = remarks,
-                    queueTimeOutURL = queueTimeOutURL,
-                    resultURL = resultURL,
-                    occasion = occasion,
+                    callBackURL = callBackURL,
+                    accountReference = accountReference,
+                    transactionDesc = transactionDesc,
+                    frequency = frequency,
                     clientId = clientId,
                     clientSecret = clientSecret
                 )

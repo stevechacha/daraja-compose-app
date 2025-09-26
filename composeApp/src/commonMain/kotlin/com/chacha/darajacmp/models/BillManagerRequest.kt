@@ -6,24 +6,17 @@ import kotlinx.serialization.Serializable
 // Bill Manager Models
 @Serializable
 data class BillManagerRequest(
-    @SerialName("Initiator")
-    val initiator: String,
-    @SerialName("SecurityCredential")
-    val securityCredential: String,
-    @SerialName("CommandID")
-    val commandID: String,
-    @SerialName("Amount")
-    val amount: Int,
-    @SerialName("PartyA")
-    val partyA: String,
-    @SerialName("PartyB")
-    val partyB: String,
-    @SerialName("Remarks")
-    val remarks: String,
-    @SerialName("QueueTimeOutURL")
-    val queueTimeOutURL: String,
-    @SerialName("ResultURL")
-    val resultURL: String,
-    @SerialName("Occasion")
-    val occasion: String
+    @SerialName("shortcode")
+    val shortcode: String,
+    @SerialName("email")
+    val email: String,
+    @SerialName("officialContact")
+    val officialContact: String,
+    @SerialName("sendReminders")
+    val sendReminders: String,
+    @SerialName("logo")
+    val logo: String,
+    @SerialName("callbackurl")
+    val callbackurl: String
 )
+

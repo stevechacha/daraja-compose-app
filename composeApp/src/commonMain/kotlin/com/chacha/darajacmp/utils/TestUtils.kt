@@ -37,44 +37,44 @@ object TestUtils {
     /**
      * Test STK Push with sample data
      */
-    suspend fun testSTKPush(): String {
-        return try {
-            val authService = AuthService()
-            val apiService = DarajaApiService(authService)
-            val timestamp = Clock.System.now().getDarajaTimestamp()
-
-
-            val result = apiService.stkPush(
-                businessShortCode = DarajaConfig.DarajaCredentials.BUSINESS_SHORT_CODE,
-                password = apiService.generatePassword(
-                    DarajaConfig.DarajaCredentials.BUSINESS_SHORT_CODE,
-                    DarajaConfig.DarajaCredentials.PASS_KEY
-                ),
-                timestamp = timestamp,
-                amount = 100,
-                phoneNumber = DarajaConfig.DarajaCredentials.TEST_PHONE_NUMBER,
-                callBackURL = "https://your-callback-url.com",
-                accountReference = "Test Payment",
-                transactionDesc = "Test Transaction",
-                clientId = DarajaConfig.DarajaCredentials.CLIENT_ID,
-                clientSecret = DarajaConfig.DarajaCredentials.CLIENT_SECRET
-            )
-            
-            when (result) {
-                is DarajaResult.Success -> {
-                    "✅ STK Push initiated successfully!\n" +
-                    "Merchant Request ID: ${result.data.merchantRequestID}\n" +
-                    "Checkout Request ID: ${result.data.checkoutRequestID}\n" +
-                    "Response: ${result.data.responseDescription}"
-                }
-                is DarajaResult.Error -> {
-                    "❌ STK Push failed: ${result.error}"
-                }
-            }
-        } catch (e: Exception) {
-            "❌ STK Push error: ${e.message}"
-        }
-    }
+//    suspend fun testSTKPush(): String {
+//        return try {
+//            val authService = AuthService()
+//            val apiService = DarajaApiService(authService)
+//            val timestamp = Clock.System.now().getDarajaTimestamp()
+//
+//
+//            val result = apiService.stkPush(
+//                businessShortCode = DarajaConfig.DarajaCredentials.BUSINESS_SHORT_CODE,
+//                password = apiService.generatePassword(
+//                    DarajaConfig.DarajaCredentials.BUSINESS_SHORT_CODE,
+//                    DarajaConfig.DarajaCredentials.PASS_KEY
+//                ),
+//                timestamp = timestamp,
+//                amount = 100,
+//                phoneNumber = DarajaConfig.DarajaCredentials.TEST_PHONE_NUMBER,
+//                callBackURL = "https://your-callback-url.com",
+//                accountReference = "Test Payment",
+//                transactionDesc = "Test Transaction",
+//                clientId = DarajaConfig.DarajaCredentials.CLIENT_ID,
+//                clientSecret = DarajaConfig.DarajaCredentials.CLIENT_SECRET
+//            )
+//
+//            when (result) {
+//                is DarajaResult.Success -> {
+//                    "✅ STK Push initiated successfully!\n" +
+//                    "Merchant Request ID: ${result.data.merchantRequestID}\n" +
+//                    "Checkout Request ID: ${result.data.checkoutRequestID}\n" +
+//                    "Response: ${result.data.responseDescription}"
+//                }
+//                is DarajaResult.Error -> {
+//                    "❌ STK Push failed: ${result.error}"
+//                }
+//            }
+//        } catch (e: Exception) {
+//            "❌ STK Push error: ${e.message}"
+//        }
+//    }
     
     /**
      * Validate your credentials format

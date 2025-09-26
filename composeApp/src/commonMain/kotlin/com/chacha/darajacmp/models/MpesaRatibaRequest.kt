@@ -6,24 +6,29 @@ import kotlinx.serialization.Serializable
 // M-Pesa Ratiba Models
 @Serializable
 data class MpesaRatibaRequest(
-    @SerialName("Initiator")
-    val initiator: String,
-    @SerialName("SecurityCredential")
-    val securityCredential: String,
-    @SerialName("CommandID")
-    val commandID: String,
+    @SerialName("StandingOrderName")
+    val standingOrderName: String,
+    @SerialName("StartDate")
+    val startDate: String,
+    @SerialName("EndDate")
+    val endDate: String,
+    @SerialName("BusinessShortCode")
+    val businessShortCode: String,
+    @SerialName("TransactionType")
+    val transactionType: String,
+    @SerialName("ReceiverPartyIdentifierType")
+    val receiverPartyIdentifierType: String,
     @SerialName("Amount")
-    val amount: Int,
+    val amount: String,
     @SerialName("PartyA")
     val partyA: String,
-    @SerialName("PartyB")
-    val partyB: String,
-    @SerialName("Remarks")
-    val remarks: String,
-    @SerialName("QueueTimeOutURL")
-    val queueTimeOutURL: String,
-    @SerialName("ResultURL")
-    val resultURL: String,
-    @SerialName("Occasion")
-    val occasion: String
+    @SerialName("CallBackURL")
+    val callBackURL: String,
+    @SerialName("AccountReference")
+    val accountReference: String,
+    @SerialName("TransactionDesc")
+    val transactionDesc: String,
+    @SerialName("Frequency")
+    val frequency: String
 )
+

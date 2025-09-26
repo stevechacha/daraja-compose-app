@@ -2,6 +2,7 @@ package com.chacha.darajacmp.network
 
 import com.chacha.darajacmp.models.*
 import com.chacha.darajacmp.network.response.*
+import com.chacha.darajacmp.utils.DarajaConfig
 import com.chacha.darajacmp.utils.DarajaResult
 import com.chacha.darajacmp.utils.getDarajaTimestamp
 import io.ktor.client.*
@@ -16,7 +17,10 @@ import io.ktor.util.*
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 
-class DarajaApiService(private val authService: AuthService) {
+class DarajaApiService(
+    private val authService: AuthService,
+    private val darajaApiCallService: DarajaApiCallService
+) {
     
     private val client = HttpClient {
         install(ContentNegotiation) {
@@ -55,9 +59,9 @@ class DarajaApiService(private val authService: AuthService) {
             println("🔐 Getting access token...")
             val token = authService.getValidToken(clientId, clientSecret)
                 ?: return DarajaResult.Error("Failed to get access token")
-            
+
             println("✅ Access token received: ${token.take(20)}...")
-            
+
             val request = STKPushRequest(
                 businessShortCode = businessShortCode,
                 password = password,
@@ -71,29 +75,33 @@ class DarajaApiService(private val authService: AuthService) {
                 accountReference = accountReference,
                 transactionDesc = transactionDesc
             )
-            
+
             println("📱 Sending STK Push request...")
             println("   Amount: $amount KES")
             println("   Phone: $phoneNumber")
             println("   Business Code: $businessShortCode")
-            
+
+//            darajaApiCallService.initiateMpesaExpress(request)
+
+
+
             val response = client.post("https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest") {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer $token")
                 }
                 setBody(request)
             }
-            
+
             val responseText = response.body<String>()
             println("📡 STK Push raw response: $responseText")
-            
-            val json = Json { 
+
+            val json = Json {
                 ignoreUnknownKeys = true
                 isLenient = true
             }
-            
+
             val stkResponse = json.decodeFromString<STKPushResponse>(responseText)
-            
+
             println("✅ STK Push response received")
             DarajaResult.Success(stkResponse)
         } catch (e: Exception) {
@@ -433,9 +441,9 @@ class DarajaApiService(private val authService: AuthService) {
         securityCredential: String,
         commandID: String,
         transactionID: String,
-        amount: Int,
+        amount: String,
         receiverParty: String,
-        recieverIdentifierType: Int,
+        recieverIdentifierType: String,
         resultURL: String,
         queueTimeOutURL: String,
         remarks: String,
@@ -470,6 +478,7 @@ class DarajaApiService(private val authService: AuthService) {
             println("   Receiver Party: $receiverParty")
             println("   Command ID: $commandID")
             println("   Initiator: $initiator")
+            println("   Receiver Identifier Type: $recieverIdentifierType")
 
             val response = client.post("https://sandbox.safaricom.co.ke/mpesa/reversal/v1/request") {
                 headers {
@@ -502,13 +511,15 @@ class DarajaApiService(private val authService: AuthService) {
         initiator: String,
         securityCredential: String,
         commandID: String,
-        amount: Int,
+        senderIdentifierType: String,
+        receiverIdentifierType: String,
+        amount: String,
         partyA: String,
         partyB: String,
+        accountReference: String,
         remarks: String,
         queueTimeOutURL: String,
         resultURL: String,
-        occasion: String,
         clientId: String,
         clientSecret: String
     ): DarajaResult<TaxRemittanceResponse> {
@@ -523,13 +534,15 @@ class DarajaApiService(private val authService: AuthService) {
                 initiator = initiator,
                 securityCredential = securityCredential,
                 commandID = commandID,
+                senderIdentifierType = senderIdentifierType,
+                receiverIdentifierType = receiverIdentifierType,
                 amount = amount,
                 partyA = partyA,
                 partyB = partyB,
+                accountReference = accountReference,
                 remarks = remarks,
                 queueTimeOutURL = queueTimeOutURL,
-                resultURL = resultURL,
-                occasion = occasion
+                resultURL = resultURL
             )
 
             println("💰 Initiating tax remittance...")
@@ -538,8 +551,11 @@ class DarajaApiService(private val authService: AuthService) {
             println("   Party B: $partyB")
             println("   Command ID: $commandID")
             println("   Initiator: $initiator")
+            println("   Sender Identifier Type: $senderIdentifierType")
+            println("   Receiver Identifier Type: $receiverIdentifierType")
+            println("   Account Reference: $accountReference")
 
-            val response = client.post("https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest") {
+            val response = client.post(DarajaConfig.SANDBOX_TAX_REMITTANCE) {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer $token")
                 }
@@ -570,13 +586,16 @@ class DarajaApiService(private val authService: AuthService) {
         initiator: String,
         securityCredential: String,
         commandID: String,
-        amount: Int,
+        senderIdentifierType: String,
+        receiverIdentifierType: String,
+        amount: String,
         partyA: String,
         partyB: String,
+        accountReference: String,
+        requester: String,
         remarks: String,
         queueTimeOutURL: String,
         resultURL: String,
-        occasion: String,
         clientId: String,
         clientSecret: String
     ): DarajaResult<BusinessPayBillResponse> {
@@ -591,13 +610,16 @@ class DarajaApiService(private val authService: AuthService) {
                 initiator = initiator,
                 securityCredential = securityCredential,
                 commandID = commandID,
+                senderIdentifierType = senderIdentifierType,
+                receiverIdentifierType = receiverIdentifierType,
                 amount = amount,
                 partyA = partyA,
                 partyB = partyB,
+                accountReference = accountReference,
+                requester = requester,
                 remarks = remarks,
                 queueTimeOutURL = queueTimeOutURL,
-                resultURL = resultURL,
-                occasion = occasion
+                resultURL = resultURL
             )
 
             println("💼 Processing business pay bill...")
@@ -606,8 +628,12 @@ class DarajaApiService(private val authService: AuthService) {
             println("   Party B: $partyB")
             println("   Command ID: $commandID")
             println("   Initiator: $initiator")
+            println("   Sender Identifier Type: $senderIdentifierType")
+            println("   Receiver Identifier Type: $receiverIdentifierType")
+            println("   Account Reference: $accountReference")
+            println("   Requester: $requester")
 
-            val response = client.post("https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest") {
+            val response = client.post(DarajaConfig.SANDBOX_BUSINESS_PAY_BILL) {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer $token")
                 }
@@ -638,13 +664,16 @@ class DarajaApiService(private val authService: AuthService) {
         initiator: String,
         securityCredential: String,
         commandID: String,
-        amount: Int,
+        senderIdentifierType: String,
+        receiverIdentifierType: String,
+        amount: String,
         partyA: String,
         partyB: String,
+        accountReference: String,
+        requester: String,
         remarks: String,
         queueTimeOutURL: String,
         resultURL: String,
-        occasion: String,
         clientId: String,
         clientSecret: String
     ): DarajaResult<BusinessBuyGoodsResponse> {
@@ -659,13 +688,16 @@ class DarajaApiService(private val authService: AuthService) {
                 initiator = initiator,
                 securityCredential = securityCredential,
                 commandID = commandID,
+                senderIdentifierType = senderIdentifierType,
+                receiverIdentifierType = receiverIdentifierType,
                 amount = amount,
                 partyA = partyA,
                 partyB = partyB,
+                accountReference = accountReference,
+                requester = requester,
                 remarks = remarks,
                 queueTimeOutURL = queueTimeOutURL,
-                resultURL = resultURL,
-                occasion = occasion
+                resultURL = resultURL
             )
 
             println("🛒 Processing business buy goods...")
@@ -674,8 +706,12 @@ class DarajaApiService(private val authService: AuthService) {
             println("   Party B: $partyB")
             println("   Command ID: $commandID")
             println("   Initiator: $initiator")
+            println("   Sender Identifier Type: $senderIdentifierType")
+            println("   Receiver Identifier Type: $receiverIdentifierType")
+            println("   Account Reference: $accountReference")
+            println("   Requester: $requester")
 
-            val response = client.post("https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest") {
+            val response = client.post(DarajaConfig.SANDBOX_BUSINESS_BUY_GOODS) {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer $token")
                 }
@@ -703,16 +739,12 @@ class DarajaApiService(private val authService: AuthService) {
     
     // Bill Manager
     suspend fun billManager(
-        initiator: String,
-        securityCredential: String,
-        commandID: String,
-        amount: Int,
-        partyA: String,
-        partyB: String,
-        remarks: String,
-        queueTimeOutURL: String,
-        resultURL: String,
-        occasion: String,
+        shortcode: String,
+        email: String,
+        officialContact: String,
+        sendReminders: String,
+        logo: String,
+        callbackurl: String,
         clientId: String,
         clientSecret: String
     ): DarajaResult<BillManagerResponse> {
@@ -724,26 +756,23 @@ class DarajaApiService(private val authService: AuthService) {
             println("✅ Access token received for Bill Manager: ${token.take(20)}...")
 
             val request = BillManagerRequest(
-                initiator = initiator,
-                securityCredential = securityCredential,
-                commandID = commandID,
-                amount = amount,
-                partyA = partyA,
-                partyB = partyB,
-                remarks = remarks,
-                queueTimeOutURL = queueTimeOutURL,
-                resultURL = resultURL,
-                occasion = occasion
+                shortcode = shortcode,
+                email = email,
+                officialContact = officialContact,
+                sendReminders = sendReminders,
+                logo = logo,
+                callbackurl = callbackurl
             )
 
-            println("📋 Processing bill manager...")
-            println("   Amount: $amount KES")
-            println("   Party A: $partyA")
-            println("   Party B: $partyB")
-            println("   Command ID: $commandID")
-            println("   Initiator: $initiator")
+            println("📋 Processing bill manager opt-in...")
+            println("   Short Code: $shortcode")
+            println("   Email: $email")
+            println("   Official Contact: $officialContact")
+            println("   Send Reminders: $sendReminders")
+            println("   Logo: $logo")
+            println("   Callback URL: $callbackurl")
 
-            val response = client.post("https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest") {
+            val response = client.post("https://api.safaricom.co.ke/v1/billmanager-invoice/optin") {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer $token")
                 }
@@ -771,16 +800,13 @@ class DarajaApiService(private val authService: AuthService) {
     
     // B2B Express CheckOut
     suspend fun b2bExpressCheckOut(
-        initiator: String,
-        securityCredential: String,
-        commandID: String,
-        amount: Int,
-        partyA: String,
-        partyB: String,
-        remarks: String,
-        queueTimeOutURL: String,
-        resultURL: String,
-        occasion: String,
+        primaryShortCode: String,
+        receiverShortCode: String,
+        amount: String,
+        paymentRef: String,
+        callbackUrl: String,
+        partnerName: String,
+        requestRefID: String,
         clientId: String,
         clientSecret: String
     ): DarajaResult<B2BExpressCheckOutResponse> {
@@ -792,26 +818,24 @@ class DarajaApiService(private val authService: AuthService) {
             println("✅ Access token received for B2B Express CheckOut: ${token.take(20)}...")
 
             val request = B2BExpressCheckOutRequest(
-                initiator = initiator,
-                securityCredential = securityCredential,
-                commandID = commandID,
+                primaryShortCode = primaryShortCode,
+                receiverShortCode = receiverShortCode,
                 amount = amount,
-                partyA = partyA,
-                partyB = partyB,
-                remarks = remarks,
-                queueTimeOutURL = queueTimeOutURL,
-                resultURL = resultURL,
-                occasion = occasion
+                paymentRef = paymentRef,
+                callbackUrl = callbackUrl,
+                partnerName = partnerName,
+                requestRefID = requestRefID
             )
 
             println("🏢 Processing B2B Express CheckOut...")
             println("   Amount: $amount KES")
-            println("   Party A: $partyA")
-            println("   Party B: $partyB")
-            println("   Command ID: $commandID")
-            println("   Initiator: $initiator")
+            println("   Primary Short Code: $primaryShortCode")
+            println("   Receiver Short Code: $receiverShortCode")
+            println("   Payment Ref: $paymentRef")
+            println("   Partner Name: $partnerName")
+            println("   Request Ref ID: $requestRefID")
 
-            val response = client.post("https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest") {
+            val response = client.post("https://sandbox.safaricom.co.ke/v1/ussdpush/get-msisdn") {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer $token")
                 }
@@ -842,13 +866,16 @@ class DarajaApiService(private val authService: AuthService) {
         initiator: String,
         securityCredential: String,
         commandID: String,
-        amount: Int,
+        senderIdentifierType: String,
+        receiverIdentifierType: String,
+        amount: String,
         partyA: String,
         partyB: String,
+        accountReference: String,
+        requester: String,
         remarks: String,
         queueTimeOutURL: String,
         resultURL: String,
-        occasion: String,
         clientId: String,
         clientSecret: String
     ): DarajaResult<B2CAccountTopUpResponse> {
@@ -863,13 +890,16 @@ class DarajaApiService(private val authService: AuthService) {
                 initiator = initiator,
                 securityCredential = securityCredential,
                 commandID = commandID,
+                senderIdentifierType = senderIdentifierType,
+                receiverIdentifierType = receiverIdentifierType,
                 amount = amount,
                 partyA = partyA,
                 partyB = partyB,
+                accountReference = accountReference,
+                requester = requester,
                 remarks = remarks,
                 queueTimeOutURL = queueTimeOutURL,
-                resultURL = resultURL,
-                occasion = occasion
+                resultURL = resultURL
             )
 
             println("💰 Processing B2C Account Top Up...")
@@ -878,8 +908,12 @@ class DarajaApiService(private val authService: AuthService) {
             println("   Party B: $partyB")
             println("   Command ID: $commandID")
             println("   Initiator: $initiator")
+            println("   Sender Identifier Type: $senderIdentifierType")
+            println("   Receiver Identifier Type: $receiverIdentifierType")
+            println("   Account Reference: $accountReference")
+            println("   Requester: $requester")
 
-            val response = client.post("https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest") {
+            val response = client.post(DarajaConfig.SANDBOX_B2C_ACCOUNT_TOP_UP) {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer $token")
                 }
@@ -907,16 +941,18 @@ class DarajaApiService(private val authService: AuthService) {
     
     // M-Pesa Ratiba
     suspend fun mpesaRatiba(
-        initiator: String,
-        securityCredential: String,
-        commandID: String,
-        amount: Int,
+        standingOrderName: String,
+        startDate: String,
+        endDate: String,
+        businessShortCode: String,
+        transactionType: String,
+        receiverPartyIdentifierType: String,
+        amount: String,
         partyA: String,
-        partyB: String,
-        remarks: String,
-        queueTimeOutURL: String,
-        resultURL: String,
-        occasion: String,
+        callBackURL: String,
+        accountReference: String,
+        transactionDesc: String,
+        frequency: String,
         clientId: String,
         clientSecret: String
     ): DarajaResult<MpesaRatibaResponse> {
@@ -928,26 +964,31 @@ class DarajaApiService(private val authService: AuthService) {
             println("✅ Access token received for M-Pesa Ratiba: ${token.take(20)}...")
 
             val request = MpesaRatibaRequest(
-                initiator = initiator,
-                securityCredential = securityCredential,
-                commandID = commandID,
+                standingOrderName = standingOrderName,
+                startDate = startDate,
+                endDate = endDate,
+                businessShortCode = businessShortCode,
+                transactionType = transactionType,
+                receiverPartyIdentifierType = receiverPartyIdentifierType,
                 amount = amount,
                 partyA = partyA,
-                partyB = partyB,
-                remarks = remarks,
-                queueTimeOutURL = queueTimeOutURL,
-                resultURL = resultURL,
-                occasion = occasion
+                callBackURL = callBackURL,
+                accountReference = accountReference,
+                transactionDesc = transactionDesc,
+                frequency = frequency
             )
 
-            println("📅 Processing M-Pesa Ratiba...")
+            println("📅 Processing M-Pesa Ratiba standing order...")
+            println("   Standing Order Name: $standingOrderName")
+            println("   Start Date: $startDate")
+            println("   End Date: $endDate")
+            println("   Business Short Code: $businessShortCode")
             println("   Amount: $amount KES")
             println("   Party A: $partyA")
-            println("   Party B: $partyB")
-            println("   Command ID: $commandID")
-            println("   Initiator: $initiator")
+            println("   Transaction Type: $transactionType")
+            println("   Frequency: $frequency")
 
-            val response = client.post("https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest") {
+            val response = client.post("https://sandbox.safaricom.co.ke/standingorder/v1/createStandingOrderExternal") {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer $token")
                 }

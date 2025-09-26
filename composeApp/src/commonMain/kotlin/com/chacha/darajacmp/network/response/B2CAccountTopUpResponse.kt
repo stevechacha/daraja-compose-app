@@ -20,3 +20,4 @@ data class B2CAccountTopUpResponse(
     @SerialName("errorMessage")
     val errorMessage: String? = null
 )
+

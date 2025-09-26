@@ -21,12 +21,16 @@ fun BusinessBuyGoodsScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
     var initiator by remember { mutableStateOf("testapi") }
     var securityCredential by remember { mutableStateOf("safaricom123!@#") } // Replace with actual encrypted credential
     var commandID by remember { mutableStateOf("BusinessBuyGoods") }
-    var amount by remember { mutableStateOf("5") }
-    var partyA by remember { mutableStateOf("174379") } // Your business short code
-    var partyB by remember { mutableStateOf("174379") } // Buy Goods Till Number
-    var remarks by remember { mutableStateOf("Business Buy Goods Test") }
-    var queueTimeOutURL by remember { mutableStateOf("https://mydomain.com/b2c/queue") }
-    var resultURL by remember { mutableStateOf("https://mydomain.com/b2c/result") }
+    var amount by remember { mutableStateOf("239") }
+    var partyA by remember { mutableStateOf("123456") }
+    var partyB by remember { mutableStateOf("000000") }
+    var senderIdentifierType by remember { mutableStateOf("4") }
+    var receiverIdentifierType by remember { mutableStateOf("4") }
+    var accountReference by remember { mutableStateOf("353353") }
+    var requester by remember { mutableStateOf("254700000000") }
+    var remarks by remember { mutableStateOf("OK") }
+    var queueTimeOutURL by remember { mutableStateOf("https://mydomain.com/b2b/businessbuygoods/queue/") }
+    var resultURL by remember { mutableStateOf("https://mydomain.com/b2b/businessbuygoods/result/") }
     var occasion by remember { mutableStateOf("Buy Goods Payment") }
 
     Column(
@@ -110,7 +114,42 @@ fun BusinessBuyGoodsScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
             label = { Text("Party B (Buy Goods Till Number)") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            supportingText = { Text("The Buy Goods Till Number (e.g., 174379)") }
+            supportingText = { Text("The Buy Goods Till Number") }
+        )
+
+        OutlinedTextField(
+            value = senderIdentifierType,
+            onValueChange = { senderIdentifierType = it },
+            label = { Text("Sender Identifier Type") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Sender identifier type (usually '4' for short code)") }
+        )
+
+        OutlinedTextField(
+            value = receiverIdentifierType,
+            onValueChange = { receiverIdentifierType = it },
+            label = { Text("Receiver Identifier Type") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Receiver identifier type (usually '4' for short code)") }
+        )
+
+        OutlinedTextField(
+            value = accountReference,
+            onValueChange = { accountReference = it },
+            label = { Text("Account Reference") },
+            modifier = Modifier.fillMaxWidth(),
+            supportingText = { Text("Account reference for the buy goods transaction") }
+        )
+
+        OutlinedTextField(
+            value = requester,
+            onValueChange = { requester = it },
+            label = { Text("Requester Phone") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Phone number of the requester (254XXXXXXXXX)") }
         )
 
         OutlinedTextField(
@@ -151,6 +190,8 @@ fun BusinessBuyGoodsScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                     initiator.isNotBlank() && securityCredential.isNotBlank() &&
                     commandID.isNotBlank() && amount.isNotBlank() &&
                     partyA.isNotBlank() && partyB.isNotBlank() &&
+                    senderIdentifierType.isNotBlank() && receiverIdentifierType.isNotBlank() &&
+                    accountReference.isNotBlank() && requester.isNotBlank() &&
                     remarks.isNotBlank() && queueTimeOutURL.isNotBlank() &&
                     resultURL.isNotBlank() && occasion.isNotBlank()) {
                     viewModel.processBusinessBuyGoods(
@@ -159,9 +200,13 @@ fun BusinessBuyGoodsScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                         initiator = initiator,
                         securityCredential = securityCredential,
                         commandID = commandID,
-                        amount = amount.toIntOrNull() ?: 0,
+                        senderIdentifierType = senderIdentifierType,
+                        receiverIdentifierType = receiverIdentifierType,
+                        amount = amount,
                         partyA = partyA,
                         partyB = partyB,
+                        accountReference = accountReference,
+                        requester = requester,
                         remarks = remarks,
                         queueTimeOutURL = queueTimeOutURL,
                         resultURL = resultURL,

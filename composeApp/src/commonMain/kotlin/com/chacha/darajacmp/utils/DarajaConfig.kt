@@ -22,10 +22,19 @@ object DarajaConfig {
     const val SANDBOX_STK_QUERY_URL = "$SANDBOX_BASE_URL/mpesa/stkpushquery/v1/query"
     const val SANDBOX_C2B_REGISTER_URL = "$SANDBOX_BASE_URL/mpesa/c2b/v1/registerurl"
     const val SANDBOX_C2B_SIMULATE_URL = "$SANDBOX_BASE_URL/mpesa/c2b/v1/simulate"
-    const val SANDBOX_B2C_URL = "$SANDBOX_BASE_URL/mpesa/b2c/v1/paymentrequest"
+    const val SANDBOX_B2C = "https://sandbox.safaricom.co.ke/mpesa/b2c/v3/paymentrequest"
+    const val SANDBOX_DYNAMIC_QR_CODE = "https://sandbox.safaricom.co.ke/mpesa/qrcode/v1/generate"
     const val SANDBOX_ACCOUNT_BALANCE_URL = "$SANDBOX_BASE_URL/mpesa/accountbalance/v1/query"
     const val SANDBOX_TRANSACTION_STATUS_URL = "$SANDBOX_BASE_URL/mpesa/transactionstatus/v1/query"
     const val SANDBOX_REVERSAL_URL = "$SANDBOX_BASE_URL/mpesa/reversal/v1/request"
+    const val SANDBOX_TAX_REMITTANCE = "$SANDBOX_BASE_URL/mpesa/b2b/v1/remittax"
+    const val SANDBOX_BUSINESS_PAY_BILL = "https://sandbox.safaricom.co.ke/mpesa/b2b/v1/paymentrequest"
+    const val SANDBOX_BUSINESS_BUY_GOODS = "https://sandbox.safaricom.co.ke/mpesa/b2b/v1/paymentrequest"
+    const val SANDBOX_BILL_MANAGER = "https://api.safaricom.co.ke/v1/billmanager-invoice/optin"
+    const val SANDBOX_B2C_ACCOUNT_TOP_UP = "https://sandbox.safaricom.co.ke/mpesa/b2b/v1/paymentrequest"
+    const val SANDBOX_M_RATIBA = "https://sandbox.safaricom.co.ke/standingorder/v1/createStandingOrderExternal"
+    const val SANDBOX_B2B_EXPRESS_CHECKOUT = "https://sandbox.safaricom.co.ke/v1/ussdpush/get-msisdn"
+
 
     // Production URLs (for live environment)
     const val PRODUCTION_BASE_URL = "https://api.safaricom.co.ke"

@@ -19,11 +19,14 @@ fun TaxRemittanceScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
     var clientSecret by remember { mutableStateOf("7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg") }
     var initiator by remember { mutableStateOf("testapi") }
     var securityCredential by remember { mutableStateOf("your-encrypted-security-credential") }
-    var commandID by remember { mutableStateOf("TaxRemittance") }
+    var commandID by remember { mutableStateOf("PayTaxToKRA") }
     var amount by remember { mutableStateOf("") }
-    var partyA by remember { mutableStateOf("174379") }
-    var partyB by remember { mutableStateOf("KRA") }
-    var remarks by remember { mutableStateOf("Tax remittance payment") }
+    var partyA by remember { mutableStateOf("888880") }
+    var partyB by remember { mutableStateOf("572572") }
+    var senderIdentifierType by remember { mutableStateOf("4") }
+    var receiverIdentifierType by remember { mutableStateOf("4") }
+    var accountReference by remember { mutableStateOf("353353") }
+    var remarks by remember { mutableStateOf("OK") }
     var queueTimeOutURL by remember { mutableStateOf("https://your-callback-url.com/timeout") }
     var resultURL by remember { mutableStateOf("https://your-callback-url.com/result") }
     var occasion by remember { mutableStateOf("Tax payment") }
@@ -84,7 +87,7 @@ fun TaxRemittanceScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
             onValueChange = { commandID = it },
             label = { Text("Command ID") },
             modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("TaxRemittance") }
+            supportingText = { Text("PayTaxToKRA") }
         )
         
         OutlinedTextField(
@@ -111,6 +114,32 @@ fun TaxRemittanceScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
             label = { Text("Party B (KRA)") },
             modifier = Modifier.fillMaxWidth(),
             supportingText = { Text("KRA or tax authority identifier") }
+        )
+        
+        OutlinedTextField(
+            value = senderIdentifierType,
+            onValueChange = { senderIdentifierType = it },
+            label = { Text("Sender Identifier Type") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Sender identifier type (usually '4' for short code)") }
+        )
+        
+        OutlinedTextField(
+            value = receiverIdentifierType,
+            onValueChange = { receiverIdentifierType = it },
+            label = { Text("Receiver Identifier Type") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Receiver identifier type (usually '4' for short code)") }
+        )
+        
+        OutlinedTextField(
+            value = accountReference,
+            onValueChange = { accountReference = it },
+            label = { Text("Account Reference") },
+            modifier = Modifier.fillMaxWidth(),
+            supportingText = { Text("Account reference number for tax remittance") }
         )
         
         OutlinedTextField(
@@ -151,17 +180,21 @@ fun TaxRemittanceScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                     initiator.isNotBlank() && securityCredential.isNotBlank() &&
                     commandID.isNotBlank() && amount.isNotBlank() &&
                     partyA.isNotBlank() && partyB.isNotBlank() &&
-                    remarks.isNotBlank() && queueTimeOutURL.isNotBlank() &&
-                    resultURL.isNotBlank() && occasion.isNotBlank()) {
+                    senderIdentifierType.isNotBlank() && receiverIdentifierType.isNotBlank() &&
+                    accountReference.isNotBlank() && remarks.isNotBlank() && 
+                    queueTimeOutURL.isNotBlank() && resultURL.isNotBlank() && occasion.isNotBlank()) {
                     viewModel.remitTax(
                         clientId = clientId,
                         clientSecret = clientSecret,
                         initiator = initiator,
                         securityCredential = securityCredential,
                         commandID = commandID,
-                        amount = amount.toIntOrNull() ?: 0,
+                        senderIdentifierType = senderIdentifierType,
+                        receiverIdentifierType = receiverIdentifierType,
+                        amount = amount,
                         partyA = partyA,
                         partyB = partyB,
+                        accountReference = accountReference,
                         remarks = remarks,
                         queueTimeOutURL = queueTimeOutURL,
                         resultURL = resultURL,
@@ -248,7 +281,7 @@ fun TaxRemittanceScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "• Command ID: Must be 'TaxRemittance'",
+                    text = "• Command ID: Use 'PayTaxToKRA' for Tax Remittance",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
@@ -257,6 +290,14 @@ fun TaxRemittanceScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                 )
                 Text(
                     text = "• Party B: KRA or tax authority identifier",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Text(
+                    text = "• Sender/Receiver Identifier Type: Use '4' for short codes",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Text(
+                    text = "• Account Reference: Your tax account reference",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
@@ -362,3 +403,4 @@ fun TaxRemittanceScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
         }
     }
 }
+

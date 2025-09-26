@@ -12,18 +12,23 @@ data class TaxRemittanceRequest(
     val securityCredential: String,
     @SerialName("CommandID")
     val commandID: String,
+    @SerialName("SenderIdentifierType")
+    val senderIdentifierType: String,
+    @SerialName("RecieverIdentifierType")
+    val receiverIdentifierType: String,
     @SerialName("Amount")
-    val amount: Int,
+    val amount: String,
     @SerialName("PartyA")
     val partyA: String,
     @SerialName("PartyB")
     val partyB: String,
+    @SerialName("AccountReference")
+    val accountReference: String,
     @SerialName("Remarks")
     val remarks: String,
     @SerialName("QueueTimeOutURL")
     val queueTimeOutURL: String,
     @SerialName("ResultURL")
-    val resultURL: String,
-    @SerialName("Occasion")
-    val occasion: String
+    val resultURL: String
 )
+

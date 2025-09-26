@@ -17,17 +17,17 @@ import com.chacha.darajacmp.viewmodel.MpesaViewModel
 fun ReversalsScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
     var clientId by remember { mutableStateOf("xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ") }
     var clientSecret by remember { mutableStateOf("7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg") }
-    var initiator by remember { mutableStateOf("testapi") }
-    var securityCredential by remember { mutableStateOf("your-encrypted-security-credential") }
+    var initiator by remember { mutableStateOf("TestInit610") }
+    var securityCredential by remember { mutableStateOf("[encrypted password]") }
     var commandID by remember { mutableStateOf("TransactionReversal") }
-    var transactionID by remember { mutableStateOf("") }
-    var amount by remember { mutableStateOf("") }
-    var receiverParty by remember { mutableStateOf("254712345678") }
-    var recieverIdentifierType by remember { mutableStateOf("1") } // 1 = MSISDN
-    var resultURL by remember { mutableStateOf("https://your-callback-url.com/result") }
-    var queueTimeOutURL by remember { mutableStateOf("https://your-callback-url.com/timeout") }
-    var remarks by remember { mutableStateOf("Transaction reversal") }
-    var occasion by remember { mutableStateOf("Reversal request") }
+    var transactionID by remember { mutableStateOf("[original trans_id]") }
+    var amount by remember { mutableStateOf("[trans_amount]") }
+    var receiverParty by remember { mutableStateOf("600610") }
+    var recieverIdentifierType by remember { mutableStateOf("11") }
+    var resultURL by remember { mutableStateOf("https://ip:port/") }
+    var queueTimeOutURL by remember { mutableStateOf("https://ip:port/") }
+    var remarks by remember { mutableStateOf("Test") }
+    var occasion by remember { mutableStateOf("work") }
     
     Column(
         modifier = Modifier
@@ -170,9 +170,9 @@ fun ReversalsScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                         securityCredential = securityCredential,
                         commandID = commandID,
                         transactionID = transactionID,
-                        amount = amount.toIntOrNull() ?: 0,
+                        amount = amount,
                         receiverParty = receiverParty,
-                        recieverIdentifierType = recieverIdentifierType.toIntOrNull() ?: 1,
+                        recieverIdentifierType = recieverIdentifierType,
                         resultURL = resultURL,
                         queueTimeOutURL = queueTimeOutURL,
                         remarks = remarks,

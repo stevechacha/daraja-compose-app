@@ -18,16 +18,12 @@ import com.chacha.darajacmp.viewmodel.MpesaViewModel
 fun BillManagerScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
     var clientId by remember { mutableStateOf("xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ") }
     var clientSecret by remember { mutableStateOf("7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg") }
-    var initiator by remember { mutableStateOf("testapi") }
-    var securityCredential by remember { mutableStateOf("safaricom123!@#") } // Replace with actual encrypted credential
-    var commandID by remember { mutableStateOf("BillManager") }
-    var amount by remember { mutableStateOf("5") }
-    var partyA by remember { mutableStateOf("174379") } // Your business short code
-    var partyB by remember { mutableStateOf("174379") } // Bill Manager Till Number
-    var remarks by remember { mutableStateOf("Bill Manager Test") }
-    var queueTimeOutURL by remember { mutableStateOf("https://mydomain.com/b2c/queue") }
-    var resultURL by remember { mutableStateOf("https://mydomain.com/b2c/result") }
-    var occasion by remember { mutableStateOf("Bill Payment") }
+    var shortcode by remember { mutableStateOf("718003") }
+    var email by remember { mutableStateOf("youremail@gmail.com") }
+    var officialContact by remember { mutableStateOf("0710XXXXXX") }
+    var sendReminders by remember { mutableStateOf("1") }
+    var logo by remember { mutableStateOf("image") }
+    var callbackurl by remember { mutableStateOf("http://my.server.com/bar/callback") }
 
     Column(
         modifier = Modifier
@@ -64,108 +60,72 @@ fun BillManagerScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
         )
 
         OutlinedTextField(
-            value = initiator,
-            onValueChange = { initiator = it },
-            label = { Text("Initiator") },
-            modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("The username of the M-Pesa API account") }
-        )
-
-        OutlinedTextField(
-            value = securityCredential,
-            onValueChange = { securityCredential = it },
-            label = { Text("Security Credential") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation(),
-            supportingText = { Text("Encrypted password of the Initiator") }
-        )
-
-        OutlinedTextField(
-            value = commandID,
-            onValueChange = { commandID = it },
-            label = { Text("Command ID") },
-            modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("e.g., BillManager") }
-        )
-
-        OutlinedTextField(
-            value = amount,
-            onValueChange = { amount = it },
-            label = { Text("Amount (KES)") },
-            modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-
-        OutlinedTextField(
-            value = partyA,
-            onValueChange = { partyA = it },
-            label = { Text("Party A (Organization Short Code)") },
-            modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("Your business short code") }
-        )
-
-        OutlinedTextField(
-            value = partyB,
-            onValueChange = { partyB = it },
-            label = { Text("Party B (Bill Manager Till Number)") },
+            value = shortcode,
+            onValueChange = { shortcode = it },
+            label = { Text("Short Code") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            supportingText = { Text("The Bill Manager Till Number (e.g., 174379)") }
+            supportingText = { Text("Your business short code (e.g., 718003)") }
         )
 
         OutlinedTextField(
-            value = remarks,
-            onValueChange = { remarks = it },
-            label = { Text("Remarks") },
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("Comments that are sent along with the transaction") }
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            supportingText = { Text("Contact email address for billing") }
         )
 
         OutlinedTextField(
-            value = queueTimeOutURL,
-            onValueChange = { queueTimeOutURL = it },
-            label = { Text("Queue TimeOut URL") },
+            value = officialContact,
+            onValueChange = { officialContact = it },
+            label = { Text("Official Contact") },
             modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("URL to receive timeout callbacks") }
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            supportingText = { Text("Official contact phone number (e.g., 0710XXXXXX)") }
         )
 
         OutlinedTextField(
-            value = resultURL,
-            onValueChange = { resultURL = it },
-            label = { Text("Result URL") },
+            value = sendReminders,
+            onValueChange = { sendReminders = it },
+            label = { Text("Send Reminders") },
             modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("URL to receive transaction result callbacks") }
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("'1' for yes, '0' for no to send reminders") }
         )
 
         OutlinedTextField(
-            value = occasion,
-            onValueChange = { occasion = it },
-            label = { Text("Occasion") },
+            value = logo,
+            onValueChange = { logo = it },
+            label = { Text("Logo") },
             modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("Optional: reason for the transaction") }
+            supportingText = { Text("Base64 encoded logo image data") }
+        )
+
+        OutlinedTextField(
+            value = callbackurl,
+            onValueChange = { callbackurl = it },
+            label = { Text("Callback URL") },
+            modifier = Modifier.fillMaxWidth(),
+            supportingText = { Text("URL to receive callbacks from bill manager service") }
         )
 
         Button(
             onClick = {
                 if (clientId.isNotBlank() && clientSecret.isNotBlank() &&
-                    initiator.isNotBlank() && securityCredential.isNotBlank() &&
-                    commandID.isNotBlank() && amount.isNotBlank() &&
-                    partyA.isNotBlank() && partyB.isNotBlank() &&
-                    remarks.isNotBlank() && queueTimeOutURL.isNotBlank() &&
-                    resultURL.isNotBlank() && occasion.isNotBlank()) {
+                    shortcode.isNotBlank() && email.isNotBlank() &&
+                    officialContact.isNotBlank() && sendReminders.isNotBlank() &&
+                    logo.isNotBlank() && callbackurl.isNotBlank()) {
                     viewModel.processBillManager(
                         clientId = clientId,
                         clientSecret = clientSecret,
-                        initiator = initiator,
-                        securityCredential = securityCredential,
-                        commandID = commandID,
-                        amount = amount.toIntOrNull() ?: 0,
-                        partyA = partyA,
-                        partyB = partyB,
-                        remarks = remarks,
-                        queueTimeOutURL = queueTimeOutURL,
-                        resultURL = resultURL,
-                        occasion = occasion
+                        shortcode = shortcode,
+                        email = email,
+                        officialContact = officialContact,
+                        sendReminders = sendReminders,
+                        logo = logo,
+                        callbackurl = callbackurl
                     )
                 }
             },
@@ -248,30 +208,35 @@ fun BillManagerScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "• Party A is your business short code.",
+                    text = "• Short Code: Your business short code for bill manager opt-in",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• Party B is the Bill Manager Till Number (e.g., 174379).",
+                    text = "• Email: Contact email address for billing notifications",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• CommandID for Bill Manager is typically 'BillManager'.",
+                    text = "• Official Contact: Phone number for bill manager service",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• Security Credential must be encrypted using your certificate.",
+                    text = "• Send Reminders: '1' for yes, '0' for no email/text reminders",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• Results are sent via callback to the Result URL.",
+                    text = "• Logo: Base64 encoded image for brand display",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• Bill Manager handles utility bills, insurance, and other services.",
+                    text = "• Callback URL: Where payment confirmations are received",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Text(
+                    text = "• Bill Manager opt-in process for invoice management",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
         }
     }
 }
+

@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -18,15 +17,14 @@ import com.chacha.darajacmp.viewmodel.MpesaUiState
 import com.chacha.darajacmp.viewmodel.MpesaViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.ByteArrayInputStream
-import java.util.Base64
+import io.ktor.util.*
 
 @Composable
 fun DynamicQRScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
     var clientId by remember { mutableStateOf("xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ") }
     var clientSecret by remember { mutableStateOf("7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg") }
     var merchantName by remember { mutableStateOf("Test Merchant") }
-    var refNo by remember { mutableStateOf("REF${System.currentTimeMillis()}") }
+    var refNo by remember { mutableStateOf("REF${kotlinx.datetime.Clock.System.now().epochSeconds}") }
     var amount by remember { mutableStateOf("100") }
     var trxCode by remember { mutableStateOf("PB") } // Pay Bill
     var cpi by remember { mutableStateOf("174379") } // Business Short Code
@@ -234,22 +232,12 @@ fun QRCodeDisplay(qrCodeData: String) {
         error = null
         
         try {
-            withContext(Dispatchers.IO) {
-                // Decode base64 QR code data
-                val imageBytes = Base64.getDecoder().decode(qrCodeData)
-                val inputStream = ByteArrayInputStream(imageBytes)
-                
-                // For now, we'll just show the base64 data as text
-                // In a real implementation, you'd decode the image bytes to a bitmap
-                withContext(Dispatchers.Main) {
-                    isLoading = false
-                }
-            }
+            // For now, we'll just show the base64 data as text  
+            // In a real implementation, you'd decode the image bytes to a bitmap
+            isLoading = false
         } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                error = "Failed to decode QR code: ${e.message}"
-                isLoading = false
-            }
+            error = "Failed to decode QR code: ${e.message}"
+            isLoading = false
         }
     }
     

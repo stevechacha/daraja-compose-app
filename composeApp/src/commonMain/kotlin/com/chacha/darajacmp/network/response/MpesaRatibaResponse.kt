@@ -20,3 +20,4 @@ data class MpesaRatibaResponse(
     @SerialName("errorMessage")
     val errorMessage: String? = null
 )
+

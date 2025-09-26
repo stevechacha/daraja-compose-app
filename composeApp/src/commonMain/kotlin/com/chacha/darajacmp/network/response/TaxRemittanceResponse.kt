@@ -20,3 +20,4 @@ data class TaxRemittanceResponse(
     @SerialName("errorMessage")
     val errorMessage: String? = null
 )
+

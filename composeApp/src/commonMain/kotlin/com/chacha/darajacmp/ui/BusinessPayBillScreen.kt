@@ -21,9 +21,13 @@ fun BusinessPayBillScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
     var securityCredential by remember { mutableStateOf("your-encrypted-security-credential") }
     var commandID by remember { mutableStateOf("BusinessPayBill") }
     var amount by remember { mutableStateOf("") }
-    var partyA by remember { mutableStateOf("174379") }
-    var partyB by remember { mutableStateOf("254712345678") }
-    var remarks by remember { mutableStateOf("Business pay bill payment") }
+    var partyA by remember { mutableStateOf("123456") }
+    var partyB by remember { mutableStateOf("000000") }
+    var senderIdentifierType by remember { mutableStateOf("4") }
+    var receiverIdentifierType by remember { mutableStateOf("4") }
+    var accountReference by remember { mutableStateOf("353353") }
+    var requester by remember { mutableStateOf("254700000000") }
+    var remarks by remember { mutableStateOf("OK") }
     var queueTimeOutURL by remember { mutableStateOf("https://your-callback-url.com/timeout") }
     var resultURL by remember { mutableStateOf("https://your-callback-url.com/result") }
     var occasion by remember { mutableStateOf("Business payment") }
@@ -108,10 +112,45 @@ fun BusinessPayBillScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
         OutlinedTextField(
             value = partyB,
             onValueChange = { partyB = it },
-            label = { Text("Party B (Customer Phone)") },
+            label = { Text("Party B (Pay Bill Number)") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            supportingText = { Text("Customer phone number (254XXXXXXXXX)") }
+            supportingText = { Text("Pay bill number") }
+        )
+        
+        OutlinedTextField(
+            value = senderIdentifierType,
+            onValueChange = { senderIdentifierType = it },
+            label = { Text("Sender Identifier Type") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Sender identifier type (usually '4' for short code)") }
+        )
+        
+        OutlinedTextField(
+            value = receiverIdentifierType,
+            onValueChange = { receiverIdentifierType = it },
+            label = { Text("Receiver Identifier Type") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Receiver identifier type (usually '4' for short code)") }
+        )
+        
+        OutlinedTextField(
+            value = accountReference,
+            onValueChange = { accountReference = it },
+            label = { Text("Account Reference") },
+            modifier = Modifier.fillMaxWidth(),
+            supportingText = { Text("Account reference number") }
+        )
+        
+        OutlinedTextField(
+            value = requester,
+            onValueChange = { requester = it },
+            label = { Text("Requester Phone") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Phone number of the requester (254XXXXXXXXX)") }
         )
         
         OutlinedTextField(
@@ -152,6 +191,8 @@ fun BusinessPayBillScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                     initiator.isNotBlank() && securityCredential.isNotBlank() &&
                     commandID.isNotBlank() && amount.isNotBlank() &&
                     partyA.isNotBlank() && partyB.isNotBlank() &&
+                    senderIdentifierType.isNotBlank() && receiverIdentifierType.isNotBlank() &&
+                    accountReference.isNotBlank() && requester.isNotBlank() &&
                     remarks.isNotBlank() && queueTimeOutURL.isNotBlank() &&
                     resultURL.isNotBlank() && occasion.isNotBlank()) {
                     viewModel.processBusinessPayBill(
@@ -160,9 +201,13 @@ fun BusinessPayBillScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                         initiator = initiator,
                         securityCredential = securityCredential,
                         commandID = commandID,
-                        amount = amount.toIntOrNull() ?: 0,
+                        senderIdentifierType = senderIdentifierType,
+                        receiverIdentifierType = receiverIdentifierType,
+                        amount = amount,
                         partyA = partyA,
                         partyB = partyB,
+                        accountReference = accountReference,
+                        requester = requester,
                         remarks = remarks,
                         queueTimeOutURL = queueTimeOutURL,
                         resultURL = resultURL,
@@ -257,7 +302,19 @@ fun BusinessPayBillScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• Party B: Customer phone number (254XXXXXXXXX)",
+                    text = "• Party B: Pay Bill account number",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Text(
+                    text = "• Sender/Receiver Identifier Type: Use '4' for short codes",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Text(
+                    text = "• Account Reference: Account reference number",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Text(
+                    text = "• Requester: Phone number of the customer",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
@@ -368,3 +425,4 @@ fun BusinessPayBillScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
         }
     }
 }
+

@@ -15,11 +15,11 @@ data class ReversalRequest(
     @SerialName("TransactionID")
     val transactionID: String,
     @SerialName("Amount")
-    val amount: Int,
+    val amount: String,
     @SerialName("ReceiverParty")
     val receiverParty: String,
     @SerialName("RecieverIdentifierType")
-    val recieverIdentifierType: Int,
+    val recieverIdentifierType: String,
     @SerialName("ResultURL")
     val resultURL: String,
     @SerialName("QueueTimeOutURL")

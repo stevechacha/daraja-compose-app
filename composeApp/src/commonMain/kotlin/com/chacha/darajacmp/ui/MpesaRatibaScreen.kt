@@ -18,16 +18,18 @@ import com.chacha.darajacmp.viewmodel.MpesaViewModel
 fun MpesaRatibaScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
     var clientId by remember { mutableStateOf("xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ") }
     var clientSecret by remember { mutableStateOf("7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg") }
-    var initiator by remember { mutableStateOf("testapi") }
-    var securityCredential by remember { mutableStateOf("safaricom123!@#") } // Replace with actual encrypted credential
-    var commandID by remember { mutableStateOf("MpesaRatiba") }
-    var amount by remember { mutableStateOf("5") }
-    var partyA by remember { mutableStateOf("174379") } // Your business short code
-    var partyB by remember { mutableStateOf("254746656813") } // Customer phone number
-    var remarks by remember { mutableStateOf("M-Pesa Ratiba Test") }
-    var queueTimeOutURL by remember { mutableStateOf("https://mydomain.com/b2c/queue") }
-    var resultURL by remember { mutableStateOf("https://mydomain.com/b2c/result") }
-    var occasion by remember { mutableStateOf("Scheduled Payment") }
+    var standingOrderName by remember { mutableStateOf("Test Standing Order") }
+    var startDate by remember { mutableStateOf("20240905") }
+    var endDate by remember { mutableStateOf("20230905") }
+    var businessShortCode by remember { mutableStateOf("174379") }
+    var transactionType by remember { mutableStateOf("Standing Order Customer Pay Bill") }
+    var receiverPartyIdentifierType by remember { mutableStateOf("4") }
+    var amount by remember { mutableStateOf("4500") }
+    var partyA by remember { mutableStateOf("254708374149") }
+    var callBackURL by remember { mutableStateOf("https://mydomain.com/pat") }
+    var accountReference by remember { mutableStateOf("Test") }
+    var transactionDesc by remember { mutableStateOf("Test") }
+    var frequency by remember { mutableStateOf("2") }
 
     Column(
         modifier = Modifier
@@ -64,28 +66,55 @@ fun MpesaRatibaScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
         )
 
         OutlinedTextField(
-            value = initiator,
-            onValueChange = { initiator = it },
-            label = { Text("Initiator") },
+            value = standingOrderName,
+            onValueChange = { standingOrderName = it },
+            label = { Text("Standing Order Name") },
             modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("The username of the M-Pesa API account") }
+            supportingText = { Text("Name for the standing order (e.g., Test Standing Order)") }
         )
 
         OutlinedTextField(
-            value = securityCredential,
-            onValueChange = { securityCredential = it },
-            label = { Text("Security Credential") },
+            value = startDate,
+            onValueChange = { startDate = it },
+            label = { Text("Start Date") },
             modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation(),
-            supportingText = { Text("Encrypted password of the Initiator") }
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Start date in YYYYMMDD format (e.g., 20240905)") }
         )
 
         OutlinedTextField(
-            value = commandID,
-            onValueChange = { commandID = it },
-            label = { Text("Command ID") },
+            value = endDate,
+            onValueChange = { endDate = it },
+            label = { Text("End Date") },
             modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("e.g., MpesaRatiba") }
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("End date in YYYYMMDD format (e.g., 20230905)") }
+        )
+
+        OutlinedTextField(
+            value = businessShortCode,
+            onValueChange = { businessShortCode = it },
+            label = { Text("Business Short Code") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Your business short code (e.g., 174379)") }
+        )
+
+        OutlinedTextField(
+            value = transactionType,
+            onValueChange = { transactionType = it },
+            label = { Text("Transaction Type") },
+            modifier = Modifier.fillMaxWidth(),
+            supportingText = { Text("Type of standing order transaction") }
+        )
+
+        OutlinedTextField(
+            value = receiverPartyIdentifierType,
+            onValueChange = { receiverPartyIdentifierType = it },
+            label = { Text("Receiver Party Identifier Type") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Identifier type (e.g., '4' for short code)") }
         )
 
         OutlinedTextField(
@@ -93,79 +122,76 @@ fun MpesaRatibaScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
             onValueChange = { amount = it },
             label = { Text("Amount (KES)") },
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Payment amount per occurrence") }
         )
 
         OutlinedTextField(
             value = partyA,
             onValueChange = { partyA = it },
-            label = { Text("Party A (Business Short Code)") },
-            modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("Your business short code") }
-        )
-
-        OutlinedTextField(
-            value = partyB,
-            onValueChange = { partyB = it },
-            label = { Text("Party B (Customer Phone Number)") },
+            label = { Text("Party A (Customer Phone)") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            supportingText = { Text("The customer's M-Pesa phone number (2547...)") }
+            supportingText = { Text("Customer's M-Pesa phone number (e.g., 254708374149)") }
         )
 
         OutlinedTextField(
-            value = remarks,
-            onValueChange = { remarks = it },
-            label = { Text("Remarks") },
+            value = callBackURL,
+            onValueChange = { callBackURL = it },
+            label = { Text("Callback URL") },
             modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("Comments that are sent along with the transaction") }
+            supportingText = { Text("URL to receive standing order callbacks") }
         )
 
         OutlinedTextField(
-            value = queueTimeOutURL,
-            onValueChange = { queueTimeOutURL = it },
-            label = { Text("Queue TimeOut URL") },
+            value = accountReference,
+            onValueChange = { accountReference = it },
+            label = { Text("Account Reference") },
             modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("URL to receive timeout callbacks") }
+            supportingText = { Text("Reference for tracking the standing order") }
         )
 
         OutlinedTextField(
-            value = resultURL,
-            onValueChange = { resultURL = it },
-            label = { Text("Result URL") },
+            value = transactionDesc,
+            onValueChange = { transactionDesc = it },
+            label = { Text("Transaction Description") },
             modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("URL to receive transaction result callbacks") }
+            supportingText = { Text("Description of the standing order") }
         )
 
         OutlinedTextField(
-            value = occasion,
-            onValueChange = { occasion = it },
-            label = { Text("Occasion") },
+            value = frequency,
+            onValueChange = { frequency = it },
+            label = { Text("Frequency") },
             modifier = Modifier.fillMaxWidth(),
-            supportingText = { Text("Optional: reason for the transaction") }
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            supportingText = { Text("Execution frequency (e.g., '2' for biweekly)") }
         )
 
         Button(
             onClick = {
                 if (clientId.isNotBlank() && clientSecret.isNotBlank() &&
-                    initiator.isNotBlank() && securityCredential.isNotBlank() &&
-                    commandID.isNotBlank() && amount.isNotBlank() &&
-                    partyA.isNotBlank() && partyB.isNotBlank() &&
-                    remarks.isNotBlank() && queueTimeOutURL.isNotBlank() &&
-                    resultURL.isNotBlank() && occasion.isNotBlank()) {
+                    standingOrderName.isNotBlank() && startDate.isNotBlank() &&
+                    endDate.isNotBlank() && businessShortCode.isNotBlank() &&
+                    transactionType.isNotBlank() && receiverPartyIdentifierType.isNotBlank() &&
+                    amount.isNotBlank() && partyA.isNotBlank() &&
+                    callBackURL.isNotBlank() && accountReference.isNotBlank() &&
+                    transactionDesc.isNotBlank() && frequency.isNotBlank()) {
                     viewModel.processMpesaRatiba(
                         clientId = clientId,
                         clientSecret = clientSecret,
-                        initiator = initiator,
-                        securityCredential = securityCredential,
-                        commandID = commandID,
-                        amount = amount.toIntOrNull() ?: 0,
+                        standingOrderName = standingOrderName,
+                        startDate = startDate,
+                        endDate = endDate,
+                        businessShortCode = businessShortCode,
+                        transactionType = transactionType,
+                        receiverPartyIdentifierType = receiverPartyIdentifierType,
+                        amount = amount,
                         partyA = partyA,
-                        partyB = partyB,
-                        remarks = remarks,
-                        queueTimeOutURL = queueTimeOutURL,
-                        resultURL = resultURL,
-                        occasion = occasion
+                        callBackURL = callBackURL,
+                        accountReference = accountReference,
+                        transactionDesc = transactionDesc,
+                        frequency = frequency
                     )
                 }
             },
@@ -248,30 +274,31 @@ fun MpesaRatibaScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "• Party A is your business short code.",
+                    text = "• Standing Order Name: Unique name for the recurring payment order",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• Party B is the customer's M-Pesa phone number (2547...).",
+                    text = "• Start/End Date: Date range in YYYYMMDD format for order validity",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• CommandID for M-Pesa Ratiba is typically 'MpesaRatiba'.",
+                    text = "• Business Short Code: Your M-Pesa business short code",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• Security Credential must be encrypted using your certificate.",
+                    text = "• Party A: Customer's M-Pesa phone number receiving the payment",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• Results are sent via callback to the Result URL.",
+                    text = "• Frequency: How often the payment executes (e.g., '2' for biweekly)",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "• M-Pesa Ratiba enables scheduled recurring payments.",
+                    text = "• M-Pesa Ratiba enables automated recurring standing orders",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
         }
     }
 }
+

@@ -10,10 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import com.chacha.darajacmp.utils.DarajaConfig
 import com.chacha.darajacmp.utils.TestUtils
 import com.chacha.darajacmp.viewmodel.MpesaUiState
 import com.chacha.darajacmp.viewmodel.MpesaViewModel
+import com.chacha.darajacmp.viewmodel.NewMpesaUiState
+import com.chacha.darajacmp.viewmodel.NewMpesaViewModel
 
 
 @Composable
@@ -26,7 +29,7 @@ fun STKPushScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
     var phoneNumber by remember { mutableStateOf(DarajaConfig.DarajaCredentials.TEST_PHONE_NUMBER) }
     var callBackURL by remember { mutableStateOf("https://your-callback-url.com") }
     var accountReference by remember { mutableStateOf("Test Payment") }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -73,27 +76,27 @@ fun STKPushScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
             }
         }
         
-        OutlinedTextField(
-            value = clientId,
-            onValueChange = { clientId = it },
-            label = { Text("Client ID") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        
-        OutlinedTextField(
-            value = clientSecret,
-            onValueChange = { clientSecret = it },
-            label = { Text("Client Secret") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
-        )
-        
-        OutlinedTextField(
-            value = businessShortCode,
-            onValueChange = { businessShortCode = it },
-            label = { Text("Business Short Code") },
-            modifier = Modifier.fillMaxWidth()
-        )
+//        OutlinedTextField(
+//            value = clientId,
+//            onValueChange = { clientId = it },
+//            label = { Text("Client ID") },
+//            modifier = Modifier.fillMaxWidth()
+//        )
+//
+//        OutlinedTextField(
+//            value = clientSecret,
+//            onValueChange = { clientSecret = it },
+//            label = { Text("Client Secret") },
+//            modifier = Modifier.fillMaxWidth(),
+//            visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
+//        )
+//
+//        OutlinedTextField(
+//            value = businessShortCode,
+//            onValueChange = { businessShortCode = it },
+//            label = { Text("Business Short Code") },
+//            modifier = Modifier.fillMaxWidth()
+//        )
         
         OutlinedTextField(
             value = passKey,
@@ -134,9 +137,9 @@ fun STKPushScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
         
         Button(
             onClick = {
-                if (clientId.isNotBlank() && clientSecret.isNotBlank() && 
+                if (clientId.isNotBlank() && clientSecret.isNotBlank() &&
                     businessShortCode.isNotBlank() && passKey.isNotBlank() &&
-                    amount.isNotBlank() && phoneNumber.isNotBlank() && 
+                    amount.isNotBlank() && phoneNumber.isNotBlank() &&
                     accountReference.isNotBlank()) {
                     viewModel.initiateSTKPush(
                         clientId = clientId,

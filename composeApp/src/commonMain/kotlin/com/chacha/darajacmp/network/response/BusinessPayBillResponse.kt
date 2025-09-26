@@ -20,3 +20,4 @@ data class BusinessPayBillResponse(
     @SerialName("errorMessage")
     val errorMessage: String? = null
 )
+

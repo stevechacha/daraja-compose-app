@@ -32,6 +32,7 @@ import com.chacha.darajacmp.ui.OtherOperationsScreen
 import com.chacha.darajacmp.ui.STKPushScreen
 import com.chacha.darajacmp.ui.STKQueryScreen
 import com.chacha.darajacmp.ui.DynamicQRScreen
+import com.chacha.darajacmp.viewmodel.NewMpesaViewModel
 import daraja_compose_app.composeapp.generated.resources.Res
 import daraja_compose_app.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
@@ -54,8 +55,10 @@ fun App() {
 @Composable
 fun MpesaApp() {
     val viewModel: MpesaViewModel = viewModel()
+    val newMpesaViewModel: NewMpesaViewModel = viewModel()
+    val uiStates by newMpesaViewModel.uiState.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
-    
+
     var selectedTab by remember { mutableStateOf(0) }
     
         Column(
