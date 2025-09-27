@@ -1,20 +1,6 @@
 package com.chacha.darajacmp.utils
 
-/**
- * Daraja API Configuration
- *
- * To use this app with M-Pesa, you need to:
- * 1. Register for a Daraja API account at https://developer.safaricom.co.ke/
- * 2. Create an app and get your credentials
- * 3. Replace the sandbox values below with your actual credentials
- *
- * For production, make sure to:
- * - Use production URLs instead of sandbox URLs
- * - Store credentials securely (not in source code)
- * - Implement proper error handling and logging
- */
-
-object DarajaConfig {
+object DarajaEndPoints {
     // Sandbox URLs (for testing)
     const val SANDBOX_BASE_URL = "https://sandbox.safaricom.co.ke"
     const val SANDBOX_AUTH_URL = "$SANDBOX_BASE_URL/oauth/v1/generate?grant_type=client_credentials"

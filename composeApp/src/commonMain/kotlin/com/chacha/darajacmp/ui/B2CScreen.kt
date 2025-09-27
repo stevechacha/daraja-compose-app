@@ -15,8 +15,6 @@ import com.chacha.darajacmp.viewmodel.MpesaViewModel
 
 @Composable
 fun B2CScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
-    var clientId by remember { mutableStateOf("xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ") }
-    var clientSecret by remember { mutableStateOf("7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg") }
     var initiatorName by remember { mutableStateOf("testapi") }
     var securityCredential by remember { mutableStateOf("Safaricom999!*!") }
     var commandID by remember { mutableStateOf("BusinessPayment") }
@@ -47,20 +45,7 @@ fun B2CScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         
-        OutlinedTextField(
-            value = clientId,
-            onValueChange = { clientId = it },
-            label = { Text("Client ID") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        
-        OutlinedTextField(
-            value = clientSecret,
-            onValueChange = { clientSecret = it },
-            label = { Text("Client Secret") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
-        )
+
         
         OutlinedTextField(
             value = initiatorName,
@@ -146,15 +131,13 @@ fun B2CScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
         
         Button(
             onClick = {
-                if (clientId.isNotBlank() && clientSecret.isNotBlank() && 
+                if (
                     initiatorName.isNotBlank() && securityCredential.isNotBlank() &&
                     commandID.isNotBlank() && amount.isNotBlank() && 
                     partyA.isNotBlank() && partyB.isNotBlank() && 
                     remarks.isNotBlank() && queueTimeOutURL.isNotBlank() && 
                     resultURL.isNotBlank() && occasion.isNotBlank()) {
                     viewModel.initiateB2C(
-                        clientId = clientId,
-                        clientSecret = clientSecret,
                         initiatorName = initiatorName,
                         securityCredential = securityCredential,
                         commandID = commandID,

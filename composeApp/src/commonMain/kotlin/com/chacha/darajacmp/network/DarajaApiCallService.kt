@@ -2,7 +2,7 @@ package com.chacha.darajacmp.network
 
 import com.chacha.darajacmp.models.*
 import com.chacha.darajacmp.network.response.*
-import com.chacha.darajacmp.utils.DarajaConfig
+import com.chacha.darajacmp.utils.DarajaEndPoints
 import com.chacha.darajacmp.utils.DarajaResult
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -45,7 +45,7 @@ class DarajaApiCallService(
         val key = "$consumerKey:$consumerSecret"
         val base64Key = key.encodeBase64()
 
-        val response = httpClient.get(DarajaConfig.SANDBOX_AUTH_URL) {
+        val response = httpClient.get(DarajaEndPoints.SANDBOX_AUTH_URL) {
             headers {
                 append(HttpHeaders.Authorization, "Basic $base64Key")
                 append(HttpHeaders.Accept, "application/json")
@@ -61,7 +61,7 @@ class DarajaApiCallService(
                 is DarajaResult.Success -> {
                     val accessToken = tokenResult.data.accessToken
 
-                    val response = httpClient.post(DarajaConfig.SANDBOX_STK_PUSH_URL) {
+                    val response = httpClient.post(DarajaEndPoints.SANDBOX_STK_PUSH_URL) {
             headers {
                 append(HttpHeaders.Authorization, "Bearer $accessToken")
                             append(HttpHeaders.ContentType, "application/json")
@@ -88,7 +88,7 @@ class DarajaApiCallService(
                 is DarajaResult.Success -> {
                     val accessToken = tokenResult.data.accessToken
 
-                    return@dataResultSafeApiCall httpClient.post(urlString = DarajaConfig.SANDBOX_STK_PUSH_URL) {
+                    return@dataResultSafeApiCall httpClient.post(urlString = DarajaEndPoints.SANDBOX_STK_PUSH_URL) {
                         headers { append(HttpHeaders.Authorization, "Bearer $accessToken") }
                         setBody(queryMpesaExpressRequest)
         }.body()
@@ -102,7 +102,7 @@ class DarajaApiCallService(
                 is DarajaResult.Success -> {
                     val accessToken = tokenResult.data.accessToken
 
-                    val response = httpClient.post(DarajaConfig.SANDBOX_STK_QUERY_URL) {
+                    val response = httpClient.post(DarajaEndPoints.SANDBOX_STK_QUERY_URL) {
                         headers {
                             append(HttpHeaders.Authorization, "Bearer $accessToken")
                             append(HttpHeaders.ContentType, "application/json")
@@ -125,7 +125,7 @@ class DarajaApiCallService(
         when (val tokenResult = fetchAccessToken()) {
             is DarajaResult.Success -> {
                 val accessToken = tokenResult.data.accessToken
-                val response = httpClient.post(DarajaConfig.SANDBOX_C2B_REGISTER_URL) {
+                val response = httpClient.post(DarajaEndPoints.SANDBOX_C2B_REGISTER_URL) {
                     headers {
                         append(HttpHeaders.Authorization, "Bearer $accessToken")
                         append(HttpHeaders.ContentType, "application/json")
@@ -169,7 +169,7 @@ class DarajaApiCallService(
         when (val tokenResult = fetchAccessToken()) {
             is DarajaResult.Success -> {
                 val accessToken = tokenResult.data.accessToken
-                val response = httpClient.post(DarajaConfig.SANDBOX_B2C) {
+                val response = httpClient.post(DarajaEndPoints.SANDBOX_B2C) {
                     headers {
                         append(HttpHeaders.Authorization, "Bearer $accessToken")
                         append(HttpHeaders.ContentType, "application/json")
@@ -191,7 +191,7 @@ class DarajaApiCallService(
         when (val tokenResult = fetchAccessToken()) {
             is DarajaResult.Success -> {
                 val accessToken = tokenResult.data.accessToken
-                val response = httpClient.post(DarajaConfig.SANDBOX_DYNAMIC_QR_CODE) {
+                val response = httpClient.post(DarajaEndPoints.SANDBOX_DYNAMIC_QR_CODE) {
                     headers {
                         append(HttpHeaders.Authorization, "Bearer $accessToken")
                         append(HttpHeaders.ContentType, "application/json")
@@ -213,7 +213,7 @@ class DarajaApiCallService(
         when (val tokenResult = fetchAccessToken()) {
             is DarajaResult.Success -> {
                 val accessToken = tokenResult.data.accessToken
-                val response = httpClient.post(DarajaConfig.SANDBOX_ACCOUNT_BALANCE_URL) {
+                val response = httpClient.post(DarajaEndPoints.SANDBOX_ACCOUNT_BALANCE_URL) {
                     headers {
                         append(HttpHeaders.Authorization, "Bearer $accessToken")
                         append(HttpHeaders.ContentType, "application/json")
@@ -235,7 +235,7 @@ class DarajaApiCallService(
         when (val tokenResult = fetchAccessToken()) {
             is DarajaResult.Success -> {
                 val accessToken = tokenResult.data.accessToken
-                val response = httpClient.post(DarajaConfig.SANDBOX_TRANSACTION_STATUS_URL) {
+                val response = httpClient.post(DarajaEndPoints.SANDBOX_TRANSACTION_STATUS_URL) {
                     headers {
                         append(HttpHeaders.Authorization, "Bearer $accessToken")
                         append(HttpHeaders.ContentType, "application/json")
@@ -257,7 +257,7 @@ class DarajaApiCallService(
         when (val tokenResult = fetchAccessToken()) {
             is DarajaResult.Success -> {
                 val accessToken = tokenResult.data.accessToken
-                val response = httpClient.post(DarajaConfig.SANDBOX_REVERSAL_URL) {
+                val response = httpClient.post(DarajaEndPoints.SANDBOX_REVERSAL_URL) {
                     headers {
                         append(HttpHeaders.Authorization, "Bearer $accessToken")
                         append(HttpHeaders.ContentType, "application/json")
@@ -279,7 +279,7 @@ class DarajaApiCallService(
         when (val tokenResult = fetchAccessToken()) {
             is DarajaResult.Success -> {
                 val accessToken = tokenResult.data.accessToken
-                val response = httpClient.post(DarajaConfig.SANDBOX_TAX_REMITTANCE) {
+                val response = httpClient.post(DarajaEndPoints.SANDBOX_TAX_REMITTANCE) {
                     headers {
                         append(HttpHeaders.Authorization, "Bearer $accessToken")
                         append(HttpHeaders.ContentType, "application/json")
@@ -301,7 +301,7 @@ class DarajaApiCallService(
         when (val tokenResult = fetchAccessToken()) {
             is DarajaResult.Success -> {
                 val accessToken = tokenResult.data.accessToken
-                val response = httpClient.post(DarajaConfig.SANDBOX_BUSINESS_PAY_BILL) {
+                val response = httpClient.post(DarajaEndPoints.SANDBOX_BUSINESS_PAY_BILL) {
                     headers {
                         append(HttpHeaders.Authorization, "Bearer $accessToken")
                         append(HttpHeaders.ContentType, "application/json")
@@ -323,7 +323,7 @@ class DarajaApiCallService(
         when (val tokenResult = fetchAccessToken()) {
             is DarajaResult.Success -> {
                 val accessToken = tokenResult.data.accessToken
-                val response = httpClient.post(DarajaConfig.SANDBOX_BUSINESS_BUY_GOODS) {
+                val response = httpClient.post(DarajaEndPoints.SANDBOX_BUSINESS_BUY_GOODS) {
                     headers {
                         append(HttpHeaders.Authorization, "Bearer $accessToken")
                         append(HttpHeaders.ContentType, "application/json")
@@ -345,7 +345,7 @@ class DarajaApiCallService(
         when (val tokenResult = fetchAccessToken()) {
             is DarajaResult.Success -> {
                 val accessToken = tokenResult.data.accessToken
-                val response = httpClient.post(DarajaConfig.SANDBOX_BILL_MANAGER) {
+                val response = httpClient.post(DarajaEndPoints.SANDBOX_BILL_MANAGER) {
                     headers {
                         append(HttpHeaders.Authorization, "Bearer $accessToken")
                         append(HttpHeaders.ContentType, "application/json")
@@ -367,7 +367,7 @@ class DarajaApiCallService(
         when (val tokenResult = fetchAccessToken()) {
             is DarajaResult.Success -> {
                 val accessToken = tokenResult.data.accessToken
-                val response = httpClient.post(DarajaConfig.SANDBOX_B2B_EXPRESS_CHECKOUT) {
+                val response = httpClient.post(DarajaEndPoints.SANDBOX_B2B_EXPRESS_CHECKOUT) {
                     headers {
                         append(HttpHeaders.Authorization, "Bearer $accessToken")
                         append(HttpHeaders.ContentType, "application/json")
@@ -389,7 +389,7 @@ class DarajaApiCallService(
         when (val tokenResult = fetchAccessToken()) {
             is DarajaResult.Success -> {
                 val accessToken = tokenResult.data.accessToken
-                val response = httpClient.post(DarajaConfig.SANDBOX_B2C_ACCOUNT_TOP_UP) {
+                val response = httpClient.post(DarajaEndPoints.SANDBOX_B2C_ACCOUNT_TOP_UP) {
                     headers {
                         append(HttpHeaders.Authorization, "Bearer $accessToken")
                         append(HttpHeaders.ContentType, "application/json")
@@ -411,7 +411,7 @@ class DarajaApiCallService(
         when (val tokenResult = fetchAccessToken()) {
             is DarajaResult.Success -> {
                 val accessToken = tokenResult.data.accessToken
-                val response = httpClient.post(DarajaConfig.SANDBOX_M_RATIBA) {
+                val response = httpClient.post(DarajaEndPoints.SANDBOX_M_RATIBA) {
                     headers {
                         append(HttpHeaders.Authorization, "Bearer $accessToken")
                         append(HttpHeaders.ContentType, "application/json")

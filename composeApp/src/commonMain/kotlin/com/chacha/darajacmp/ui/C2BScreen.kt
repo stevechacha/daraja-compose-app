@@ -8,16 +8,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.chacha.darajacmp.utils.DarajaConfig
+import com.chacha.darajacmp.utils.DarajaEndPoints
 import com.chacha.darajacmp.viewmodel.MpesaUiState
 import com.chacha.darajacmp.viewmodel.MpesaViewModel
 
 
 @Composable
 fun C2BScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
-    var clientId by remember { mutableStateOf(DarajaConfig.DarajaCredentials.CLIENT_ID) }
-    var clientSecret by remember { mutableStateOf(DarajaConfig.DarajaCredentials.CLIENT_SECRET) }
-    var shortCode by remember { mutableStateOf(DarajaConfig.DarajaCredentials.BUSINESS_SHORT_CODE) }
+    var clientId by remember { mutableStateOf(DarajaEndPoints.DarajaCredentials.CLIENT_ID) }
+    var clientSecret by remember { mutableStateOf(DarajaEndPoints.DarajaCredentials.CLIENT_SECRET) }
+    var shortCode by remember { mutableStateOf(DarajaEndPoints.DarajaCredentials.BUSINESS_SHORT_CODE) }
     var confirmationURL by remember { mutableStateOf("https://your-confirmation-url.com") }
     var validationURL by remember { mutableStateOf("https://your-validation-url.com") }
     
@@ -76,8 +76,6 @@ fun C2BScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                     shortCode.isNotBlank() && confirmationURL.isNotBlank() && 
                     validationURL.isNotBlank()) {
                     viewModel.registerC2BURL(
-                        clientId = clientId,
-                        clientSecret = clientSecret,
                         shortCode = shortCode,
                         confirmationURL = confirmationURL,
                         validationURL = validationURL

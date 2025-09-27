@@ -16,8 +16,6 @@ import com.chacha.darajacmp.viewmodel.MpesaViewModel
 
 @Composable
 fun B2CAccountTopUpScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
-    var clientId by remember { mutableStateOf("xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ") }
-    var clientSecret by remember { mutableStateOf("7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg") }
     var initiator by remember { mutableStateOf("testapi") }
     var securityCredential by remember { mutableStateOf("safaricom123!@#") } // Replace with actual encrypted credential
     var commandID by remember { mutableStateOf("BusinessPayToBulk") }
@@ -50,21 +48,6 @@ fun B2CAccountTopUpScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
             text = "Top up customer accounts through the M-Pesa system.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        OutlinedTextField(
-            value = clientId,
-            onValueChange = { clientId = it },
-            label = { Text("Client ID") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            value = clientSecret,
-            onValueChange = { clientSecret = it },
-            label = { Text("Client Secret") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation()
         )
 
         OutlinedTextField(
@@ -186,7 +169,7 @@ fun B2CAccountTopUpScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
 
         Button(
             onClick = {
-                if (clientId.isNotBlank() && clientSecret.isNotBlank() &&
+                if (
                     initiator.isNotBlank() && securityCredential.isNotBlank() &&
                     commandID.isNotBlank() && amount.isNotBlank() &&
                     partyA.isNotBlank() && partyB.isNotBlank() &&
@@ -195,8 +178,6 @@ fun B2CAccountTopUpScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                     remarks.isNotBlank() && queueTimeOutURL.isNotBlank() &&
                     resultURL.isNotBlank() && occasion.isNotBlank()) {
                     viewModel.processB2CAccountTopUp(
-                        clientId = clientId,
-                        clientSecret = clientSecret,
                         initiator = initiator,
                         securityCredential = securityCredential,
                         commandID = commandID,

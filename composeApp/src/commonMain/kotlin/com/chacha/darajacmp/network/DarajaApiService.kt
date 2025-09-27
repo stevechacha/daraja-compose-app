@@ -2,7 +2,7 @@ package com.chacha.darajacmp.network
 
 import com.chacha.darajacmp.models.*
 import com.chacha.darajacmp.network.response.*
-import com.chacha.darajacmp.utils.DarajaConfig
+import com.chacha.darajacmp.utils.DarajaEndPoints
 import com.chacha.darajacmp.utils.DarajaResult
 import com.chacha.darajacmp.utils.getDarajaTimestamp
 import io.ktor.client.*
@@ -52,9 +52,9 @@ class DarajaApiService(
         callBackURL: String,
         accountReference: String,
         transactionDesc: String,
-        clientId: String,
-        clientSecret: String
     ): DarajaResult<STKPushResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             println("🔐 Getting access token...")
             val token = authService.getValidToken(clientId, clientSecret)
@@ -117,9 +117,9 @@ class DarajaApiService(
         password: String,
         timestamp: String,
         checkoutRequestID: String,
-        clientId: String,
-        clientSecret: String
     ): DarajaResult<STKQueryResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             println("🔐 Getting access token for STK Query...")
             val token = authService.getValidToken(clientId, clientSecret)
@@ -176,9 +176,9 @@ class DarajaApiService(
         responseType: String,
         confirmationURL: String,
         validationURL: String,
-        clientId: String,
-        clientSecret: String
     ): DarajaResult<C2BRegisterResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             println("🔐 Getting access token for C2B Register...")
             val token = authService.getValidToken(clientId, clientSecret)
@@ -232,9 +232,9 @@ class DarajaApiService(
         amount: Int,
         msisdn: String,
         billRefNumber: String,
-        clientId: String,
-        clientSecret: String
     ): DarajaResult<C2BSimulateResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             val token = authService.getValidToken(clientId, clientSecret)
                 ?: return DarajaResult.Error("Failed to get access token")
@@ -272,9 +272,9 @@ class DarajaApiService(
         queueTimeOutURL: String,
         resultURL: String,
         occasion: String,
-        clientId: String,
-        clientSecret: String
     ): DarajaResult<B2CResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             val token = authService.getValidToken(clientId, clientSecret)
                 ?: return DarajaResult.Error("Failed to get access token")
@@ -314,10 +314,10 @@ class DarajaApiService(
         identifierType: Int,
         remarks: String,
         queueTimeOutURL: String,
-        resultURL: String,
-        clientId: String,
-        clientSecret: String
+        resultURL: String
     ): DarajaResult<AccountBalanceResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             println("🔐 Getting access token for Account Balance...")
             val token = authService.getValidToken(clientId, clientSecret)
@@ -379,10 +379,10 @@ class DarajaApiService(
         resultURL: String,
         queueTimeOutURL: String,
         remarks: String,
-        occasion: String,
-        clientId: String,
-        clientSecret: String
+        occasion: String
     ): DarajaResult<TransactionStatusResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             println("🔐 Getting access token for Transaction Status...")
             val token = authService.getValidToken(clientId, clientSecret)
@@ -447,10 +447,10 @@ class DarajaApiService(
         resultURL: String,
         queueTimeOutURL: String,
         remarks: String,
-        occasion: String,
-        clientId: String,
-        clientSecret: String
+        occasion: String
     ): DarajaResult<ReversalResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             println("🔐 Getting access token for Reversal...")
             val token = authService.getValidToken(clientId, clientSecret)
@@ -519,10 +519,10 @@ class DarajaApiService(
         accountReference: String,
         remarks: String,
         queueTimeOutURL: String,
-        resultURL: String,
-        clientId: String,
-        clientSecret: String
+        resultURL: String
     ): DarajaResult<TaxRemittanceResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             println("🔐 Getting access token for Tax Remittance...")
             val token = authService.getValidToken(clientId, clientSecret)
@@ -555,7 +555,7 @@ class DarajaApiService(
             println("   Receiver Identifier Type: $receiverIdentifierType")
             println("   Account Reference: $accountReference")
 
-            val response = client.post(DarajaConfig.SANDBOX_TAX_REMITTANCE) {
+            val response = client.post(DarajaEndPoints.SANDBOX_TAX_REMITTANCE) {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer $token")
                 }
@@ -595,10 +595,10 @@ class DarajaApiService(
         requester: String,
         remarks: String,
         queueTimeOutURL: String,
-        resultURL: String,
-        clientId: String,
-        clientSecret: String
+        resultURL: String
     ): DarajaResult<BusinessPayBillResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             println("🔐 Getting access token for Business Pay Bill...")
             val token = authService.getValidToken(clientId, clientSecret)
@@ -633,7 +633,7 @@ class DarajaApiService(
             println("   Account Reference: $accountReference")
             println("   Requester: $requester")
 
-            val response = client.post(DarajaConfig.SANDBOX_BUSINESS_PAY_BILL) {
+            val response = client.post(DarajaEndPoints.SANDBOX_BUSINESS_PAY_BILL) {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer $token")
                 }
@@ -673,10 +673,10 @@ class DarajaApiService(
         requester: String,
         remarks: String,
         queueTimeOutURL: String,
-        resultURL: String,
-        clientId: String,
-        clientSecret: String
+        resultURL: String
     ): DarajaResult<BusinessBuyGoodsResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             println("🔐 Getting access token for Business Buy Goods...")
             val token = authService.getValidToken(clientId, clientSecret)
@@ -711,7 +711,7 @@ class DarajaApiService(
             println("   Account Reference: $accountReference")
             println("   Requester: $requester")
 
-            val response = client.post(DarajaConfig.SANDBOX_BUSINESS_BUY_GOODS) {
+            val response = client.post(DarajaEndPoints.SANDBOX_BUSINESS_BUY_GOODS) {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer $token")
                 }
@@ -745,9 +745,9 @@ class DarajaApiService(
         sendReminders: String,
         logo: String,
         callbackurl: String,
-        clientId: String,
-        clientSecret: String
     ): DarajaResult<BillManagerResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             println("🔐 Getting access token for Bill Manager...")
             val token = authService.getValidToken(clientId, clientSecret)
@@ -806,10 +806,10 @@ class DarajaApiService(
         paymentRef: String,
         callbackUrl: String,
         partnerName: String,
-        requestRefID: String,
-        clientId: String,
-        clientSecret: String
+        requestRefID: String
     ): DarajaResult<B2BExpressCheckOutResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             println("🔐 Getting access token for B2B Express CheckOut...")
             val token = authService.getValidToken(clientId, clientSecret)
@@ -876,10 +876,10 @@ class DarajaApiService(
         remarks: String,
         queueTimeOutURL: String,
         resultURL: String,
-        clientId: String,
-        clientSecret: String
     ): DarajaResult<B2CAccountTopUpResponse> {
         return try {
+            val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+            val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
             println("🔐 Getting access token for B2C Account Top Up...")
             val token = authService.getValidToken(clientId, clientSecret)
                 ?: return DarajaResult.Error("Failed to get access token")
@@ -913,7 +913,7 @@ class DarajaApiService(
             println("   Account Reference: $accountReference")
             println("   Requester: $requester")
 
-            val response = client.post(DarajaConfig.SANDBOX_B2C_ACCOUNT_TOP_UP) {
+            val response = client.post(DarajaEndPoints.SANDBOX_B2C_ACCOUNT_TOP_UP) {
                 headers {
                     append(HttpHeaders.Authorization, "Bearer $token")
                 }
@@ -952,10 +952,10 @@ class DarajaApiService(
         callBackURL: String,
         accountReference: String,
         transactionDesc: String,
-        frequency: String,
-        clientId: String,
-        clientSecret: String
+        frequency: String
     ): DarajaResult<MpesaRatibaResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             println("🔐 Getting access token for M-Pesa Ratiba...")
             val token = authService.getValidToken(clientId, clientSecret)
@@ -1025,10 +1025,10 @@ class DarajaApiService(
         remarks: String,
         queueTimeOutURL: String,
         resultURL: String,
-        occasion: String,
-        clientId: String,
-        clientSecret: String
+        occasion: String
     ): DarajaResult<B2CResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             println("🔐 Getting access token for B2C...")
             val token = authService.getValidToken(clientId, clientSecret)
@@ -1089,9 +1089,9 @@ class DarajaApiService(
         trxCode: String,
         cpi: String,
         size: String = "300",
-        clientId: String,
-        clientSecret: String
     ): DarajaResult<DynamicQRResponse> {
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
         return try {
             println("🔐 Getting access token for Dynamic QR...")
             val token = authService.getValidToken(clientId, clientSecret)

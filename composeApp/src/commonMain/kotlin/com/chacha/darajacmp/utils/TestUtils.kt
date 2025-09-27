@@ -1,9 +1,6 @@
 package com.chacha.darajacmp.utils
 
-import com.chacha.darajacmp.utils.DarajaConfig
 import com.chacha.darajacmp.network.AuthService
-import com.chacha.darajacmp.network.DarajaApiService
-import kotlinx.datetime.Clock
 
 /**
  * Test utilities for Daraja API integration
@@ -17,8 +14,8 @@ object TestUtils {
         return try {
             val authService = AuthService()
             val result = authService.authenticate(
-                clientId = DarajaConfig.DarajaCredentials.CLIENT_ID,
-                clientSecret = DarajaConfig.DarajaCredentials.CLIENT_SECRET
+                clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID,
+                clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
             )
             
             when (result) {
@@ -80,10 +77,10 @@ object TestUtils {
      * Validate your credentials format
      */
     fun validateCredentials(): String {
-        val clientId = DarajaConfig.DarajaCredentials.CLIENT_ID
-        val clientSecret = DarajaConfig.DarajaCredentials.CLIENT_SECRET
-        val businessShortCode = DarajaConfig.DarajaCredentials.BUSINESS_SHORT_CODE
-        val passKey = DarajaConfig.DarajaCredentials.PASS_KEY
+        val clientId = DarajaEndPoints.DarajaCredentials.CLIENT_ID
+        val clientSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
+        val businessShortCode = DarajaEndPoints.DarajaCredentials.BUSINESS_SHORT_CODE
+        val passKey = DarajaEndPoints.DarajaCredentials.PASS_KEY
         
         val issues = mutableListOf<String>()
         
@@ -130,9 +127,9 @@ object TestUtils {
             🔧 Daraja API Test Information
             
             Environment: Sandbox
-            Client ID: ${DarajaConfig.DarajaCredentials.CLIENT_ID.take(10)}...
-            Business Short Code: ${DarajaConfig.DarajaCredentials.BUSINESS_SHORT_CODE}
-            Test Phone: ${DarajaConfig.DarajaCredentials.TEST_PHONE_NUMBER}
+            Client ID: ${DarajaEndPoints.DarajaCredentials.CLIENT_ID.take(10)}...
+            Business Short Code: ${DarajaEndPoints.DarajaCredentials.BUSINESS_SHORT_CODE}
+            Test Phone: ${DarajaEndPoints.DarajaCredentials.TEST_PHONE_NUMBER}
             
             📱 Test Phone Numbers (Sandbox):
             • 254708374149 (Default test number)
@@ -143,8 +140,8 @@ object TestUtils {
             • Maximum: 70,000 KES
             
             🌐 Sandbox URLs:
-            • Auth: ${DarajaConfig.SANDBOX_AUTH_URL}
-            • STK Push: ${DarajaConfig.SANDBOX_STK_PUSH_URL}
+            • Auth: ${DarajaEndPoints.SANDBOX_AUTH_URL}
+            • STK Push: ${DarajaEndPoints.SANDBOX_STK_PUSH_URL}
             
             ⚠️ Important Notes:
             • This is SANDBOX environment - no real money

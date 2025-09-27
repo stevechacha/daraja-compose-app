@@ -10,23 +10,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import com.chacha.darajacmp.utils.DarajaConfig
+import com.chacha.darajacmp.utils.DarajaEndPoints
 import com.chacha.darajacmp.utils.TestUtils
 import com.chacha.darajacmp.viewmodel.MpesaUiState
 import com.chacha.darajacmp.viewmodel.MpesaViewModel
-import com.chacha.darajacmp.viewmodel.NewMpesaUiState
-import com.chacha.darajacmp.viewmodel.NewMpesaViewModel
 
 
 @Composable
 fun STKPushScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
-    var clientId by remember { mutableStateOf(DarajaConfig.DarajaCredentials.CLIENT_ID) }
-    var clientSecret by remember { mutableStateOf(DarajaConfig.DarajaCredentials.CLIENT_SECRET) }
-    var businessShortCode by remember { mutableStateOf(DarajaConfig.DarajaCredentials.BUSINESS_SHORT_CODE) }
-    var passKey by remember { mutableStateOf(DarajaConfig.DarajaCredentials.PASS_KEY) }
+    var businessShortCode by remember { mutableStateOf(DarajaEndPoints.DarajaCredentials.BUSINESS_SHORT_CODE) }
+    var passKey by remember { mutableStateOf(DarajaEndPoints.DarajaCredentials.PASS_KEY) }
     var amount by remember { mutableStateOf("100") }
-    var phoneNumber by remember { mutableStateOf(DarajaConfig.DarajaCredentials.TEST_PHONE_NUMBER) }
+    var phoneNumber by remember { mutableStateOf(DarajaEndPoints.DarajaCredentials.TEST_PHONE_NUMBER) }
     var callBackURL by remember { mutableStateOf("https://your-callback-url.com") }
     var accountReference by remember { mutableStateOf("Test Payment") }
 
@@ -75,29 +70,7 @@ fun STKPushScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                 )
             }
         }
-        
-//        OutlinedTextField(
-//            value = clientId,
-//            onValueChange = { clientId = it },
-//            label = { Text("Client ID") },
-//            modifier = Modifier.fillMaxWidth()
-//        )
-//
-//        OutlinedTextField(
-//            value = clientSecret,
-//            onValueChange = { clientSecret = it },
-//            label = { Text("Client Secret") },
-//            modifier = Modifier.fillMaxWidth(),
-//            visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
-//        )
-//
-//        OutlinedTextField(
-//            value = businessShortCode,
-//            onValueChange = { businessShortCode = it },
-//            label = { Text("Business Short Code") },
-//            modifier = Modifier.fillMaxWidth()
-//        )
-        
+
         OutlinedTextField(
             value = passKey,
             onValueChange = { passKey = it },
@@ -137,13 +110,10 @@ fun STKPushScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
         
         Button(
             onClick = {
-                if (clientId.isNotBlank() && clientSecret.isNotBlank() &&
-                    businessShortCode.isNotBlank() && passKey.isNotBlank() &&
+                if (businessShortCode.isNotBlank() && passKey.isNotBlank() &&
                     amount.isNotBlank() && phoneNumber.isNotBlank() &&
                     accountReference.isNotBlank()) {
                     viewModel.initiateSTKPush(
-                        clientId = clientId,
-                        clientSecret = clientSecret,
                         businessShortCode = businessShortCode,
                         passKey = passKey,
                         amount = amount.toIntOrNull() ?: 0,

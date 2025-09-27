@@ -6,6 +6,7 @@ import com.chacha.darajacmp.models.C2BRegisterRequest
 import com.chacha.darajacmp.network.AuthService
 import com.chacha.darajacmp.network.DarajaApiCallService
 import com.chacha.darajacmp.network.DarajaApiService
+import com.chacha.darajacmp.utils.DarajaEndPoints
 import com.chacha.darajacmp.utils.DarajaResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +17,8 @@ import kotlinx.coroutines.launch
 class MpesaViewModel : ViewModel() {
     private val authService = AuthService()
     private val  darajaApiCallService = DarajaApiCallService(
-        consumerKey = "xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ",
-        consumerSecret = "7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg"
+        consumerKey = DarajaEndPoints.DarajaCredentials.CLIENT_ID,
+        consumerSecret = DarajaEndPoints.DarajaCredentials.CLIENT_SECRET
     )
 
     private val darajaApiService = DarajaApiService(authService,darajaApiCallService)
@@ -34,8 +35,6 @@ class MpesaViewModel : ViewModel() {
     
     // STK Push - Customer Pay Bill Online
     fun initiateSTKPush(
-        clientId: String = "xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ",
-        clientSecret: String = "7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg",
         businessShortCode: String,
         passKey: String,
         amount: Int,
@@ -60,9 +59,7 @@ class MpesaViewModel : ViewModel() {
                     phoneNumber = phoneNumber,
                     callBackURL = callBackURL,
                     accountReference = accountReference,
-                    transactionDesc = transactionDesc,
-                    clientId = clientId,
-                    clientSecret = clientSecret
+                    transactionDesc = transactionDesc
                 )
                 
                 when (result) {
@@ -91,8 +88,6 @@ class MpesaViewModel : ViewModel() {
     
     // STK Query - Check payment status
     fun querySTKStatus(
-        clientId: String,
-        clientSecret: String,
         businessShortCode: String,
         passKey: String,
         checkoutRequestID: String
@@ -109,8 +104,6 @@ class MpesaViewModel : ViewModel() {
                     password = password,
                     timestamp = timestamp,
                     checkoutRequestID = checkoutRequestID,
-                    clientId = clientId,
-                    clientSecret = clientSecret
                 )
                 
                 when (result) {
@@ -139,8 +132,6 @@ class MpesaViewModel : ViewModel() {
     
     // C2B Register URL
     fun registerC2BURL(
-        clientId: String,
-        clientSecret: String,
         shortCode: String,
         responseType: String = "Completed",
         confirmationURL: String,
@@ -195,9 +186,7 @@ class MpesaViewModel : ViewModel() {
                     commandID = commandID,
                     amount = amount,
                     msisdn = msisdn,
-                    billRefNumber = billRefNumber,
-                    clientId = clientId,
-                    clientSecret = clientSecret
+                    billRefNumber = billRefNumber
                 )
                 
                 when (result) {
@@ -226,8 +215,6 @@ class MpesaViewModel : ViewModel() {
     
     // B2C - Business to Customer
     fun initiateB2C(
-        clientId: String,
-        clientSecret: String,
         initiatorName: String,
         securityCredential: String,
         commandID: String,
@@ -253,9 +240,7 @@ class MpesaViewModel : ViewModel() {
                     remarks = remarks,
                     queueTimeOutURL = queueTimeOutURL,
                     resultURL = resultURL,
-                    occasion = occasion,
-                    clientId = clientId,
-                    clientSecret = clientSecret
+                    occasion = occasion
                 )
                 
                 when (result) {
@@ -284,8 +269,6 @@ class MpesaViewModel : ViewModel() {
     
     // Dynamic QR - Generate QR Code for payments
     fun generateDynamicQR(
-        clientId: String,
-        clientSecret: String,
         merchantName: String,
         refNo: String,
         amount: Int,
@@ -303,9 +286,7 @@ class MpesaViewModel : ViewModel() {
                     amount = amount,
                     trxCode = trxCode,
                     cpi = cpi,
-                    size = size,
-                    clientId = clientId,
-                    clientSecret = clientSecret
+                    size = size
                 )
                 
                 when (result) {
@@ -357,9 +338,7 @@ class MpesaViewModel : ViewModel() {
                     identifierType = identifierType,
                     remarks = remarks,
                     queueTimeOutURL = queueTimeOutURL,
-                    resultURL = resultURL,
-                    clientId = clientId,
-                    clientSecret = clientSecret
+                    resultURL = resultURL
                 )
                 
                 when (result) {
@@ -388,8 +367,6 @@ class MpesaViewModel : ViewModel() {
     
     // Transaction Status
     fun queryTransactionStatus(
-        clientId: String,
-        clientSecret: String,
         initiator: String,
         securityCredential: String,
         commandID: String,
@@ -415,9 +392,7 @@ class MpesaViewModel : ViewModel() {
                     resultURL = resultURL,
                     queueTimeOutURL = queueTimeOutURL,
                     remarks = remarks,
-                    occasion = occasion,
-                    clientId = clientId,
-                    clientSecret = clientSecret
+                    occasion = occasion
                 )
                 
                 when (result) {
@@ -446,8 +421,6 @@ class MpesaViewModel : ViewModel() {
     
     // Reversal
     fun reverseTransaction(
-        clientId: String,
-        clientSecret: String,
         initiator: String,
         securityCredential: String,
         commandID: String,
@@ -475,9 +448,7 @@ class MpesaViewModel : ViewModel() {
                     resultURL = resultURL,
                     queueTimeOutURL = queueTimeOutURL,
                     remarks = remarks,
-                    occasion = occasion,
-                    clientId = clientId,
-                    clientSecret = clientSecret
+                    occasion = occasion
                 )
                 
                 when (result) {
@@ -506,8 +477,6 @@ class MpesaViewModel : ViewModel() {
     
     // Tax Remittance
     fun remitTax(
-        clientId: String,
-        clientSecret: String,
         initiator: String,
         securityCredential: String,
         commandID: String,
@@ -538,9 +507,7 @@ class MpesaViewModel : ViewModel() {
                     accountReference = accountReference,
                     remarks = remarks,
                     queueTimeOutURL = queueTimeOutURL,
-                    resultURL = resultURL,
-                    clientId = clientId,
-                    clientSecret = clientSecret
+                    resultURL = resultURL
                 )
                 
                 when (result) {
@@ -569,8 +536,6 @@ class MpesaViewModel : ViewModel() {
     
     // Business Pay Bill
     fun processBusinessPayBill(
-        clientId: String,
-        clientSecret: String,
         initiator: String,
         securityCredential: String,
         commandID: String,
@@ -603,9 +568,7 @@ class MpesaViewModel : ViewModel() {
                     requester = requester,
                     remarks = remarks,
                     queueTimeOutURL = queueTimeOutURL,
-                    resultURL = resultURL,
-                    clientId = clientId,
-                    clientSecret = clientSecret
+                    resultURL = resultURL
                 )
                 
                 when (result) {
@@ -633,8 +596,6 @@ class MpesaViewModel : ViewModel() {
     }
     
     fun processBusinessBuyGoods(
-        clientId: String,
-        clientSecret: String,
         initiator: String,
         securityCredential: String,
         commandID: String,
@@ -667,9 +628,7 @@ class MpesaViewModel : ViewModel() {
                     requester = requester,
                     remarks = remarks,
                     queueTimeOutURL = queueTimeOutURL,
-                    resultURL = resultURL,
-                    clientId = clientId,
-                    clientSecret = clientSecret
+                    resultURL = resultURL
                 )
                 
                 when (result) {
@@ -697,8 +656,6 @@ class MpesaViewModel : ViewModel() {
     }
     
     fun processBillManager(
-        clientId: String,
-        clientSecret: String,
         shortcode: String,
         email: String,
         officialContact: String,
@@ -716,9 +673,7 @@ class MpesaViewModel : ViewModel() {
                     officialContact = officialContact,
                     sendReminders = sendReminders,
                     logo = logo,
-                    callbackurl = callbackurl,
-                    clientId = clientId,
-                    clientSecret = clientSecret
+                    callbackurl = callbackurl
                 )
                 
                 when (result) {
@@ -746,8 +701,6 @@ class MpesaViewModel : ViewModel() {
     }
     
     fun processB2BExpressCheckOut(
-        clientId: String,
-        clientSecret: String,
         primaryShortCode: String,
         receiverShortCode: String,
         amount: String,
@@ -767,9 +720,7 @@ class MpesaViewModel : ViewModel() {
                     paymentRef = paymentRef,
                     callbackUrl = callbackUrl,
                     partnerName = partnerName,
-                    requestRefID = requestRefID,
-                    clientId = clientId,
-                    clientSecret = clientSecret
+                    requestRefID = requestRefID
                 )
                 
                 when (result) {
@@ -797,8 +748,6 @@ class MpesaViewModel : ViewModel() {
     }
     
     fun processB2CAccountTopUp(
-        clientId: String,
-        clientSecret: String,
         initiator: String,
         securityCredential: String,
         commandID: String,
@@ -831,9 +780,7 @@ class MpesaViewModel : ViewModel() {
                     requester = requester,
                     remarks = remarks,
                     queueTimeOutURL = queueTimeOutURL,
-                    resultURL = resultURL,
-                    clientId = clientId,
-                    clientSecret = clientSecret
+                    resultURL = resultURL
                 )
                 
                 when (result) {
@@ -861,8 +808,6 @@ class MpesaViewModel : ViewModel() {
     }
     
     fun processMpesaRatiba(
-        clientId: String,
-        clientSecret: String,
         standingOrderName: String,
         startDate: String,
         endDate: String,
@@ -892,9 +837,7 @@ class MpesaViewModel : ViewModel() {
                     callBackURL = callBackURL,
                     accountReference = accountReference,
                     transactionDesc = transactionDesc,
-                    frequency = frequency,
-                    clientId = clientId,
-                    clientSecret = clientSecret
+                    frequency = frequency
                 )
                 
                 when (result) {
