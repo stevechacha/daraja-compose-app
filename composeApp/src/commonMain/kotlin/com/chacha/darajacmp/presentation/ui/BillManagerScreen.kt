@@ -16,8 +16,6 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun BillManagerScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
-    var clientId by remember { mutableStateOf("xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ") }
-    var clientSecret by remember { mutableStateOf("7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg") }
     var shortcode by remember { mutableStateOf("718003") }
     var email by remember { mutableStateOf("youremail@gmail.com") }
     var officialContact by remember { mutableStateOf("0710XXXXXX") }
@@ -44,20 +42,6 @@ fun BillManagerScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        OutlinedTextField(
-            value = clientId,
-            onValueChange = { clientId = it },
-            label = { Text("Client ID") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            value = clientSecret,
-            onValueChange = { clientSecret = it },
-            label = { Text("Client Secret") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation()
-        )
 
         OutlinedTextField(
             value = shortcode,
@@ -113,13 +97,11 @@ fun BillManagerScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
 
         Button(
             onClick = {
-                if (clientId.isNotBlank() && clientSecret.isNotBlank() &&
+                if (
                     shortcode.isNotBlank() && email.isNotBlank() &&
                     officialContact.isNotBlank() && sendReminders.isNotBlank() &&
                     logo.isNotBlank() && callbackurl.isNotBlank()) {
                     viewModel.processBillManager(
-                        clientId = clientId,
-                        clientSecret = clientSecret,
                         shortcode = shortcode,
                         email = email,
                         officialContact = officialContact,

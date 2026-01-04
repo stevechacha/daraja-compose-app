@@ -15,8 +15,6 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun TransactionStatusScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
-    var clientId by remember { mutableStateOf("xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ") }
-    var clientSecret by remember { mutableStateOf("7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg") }
     var initiator by remember { mutableStateOf("testapi") }
     var securityCredential by remember { mutableStateOf("your-encrypted-security-credential") }
     var commandID by remember { mutableStateOf("TransactionStatusQuery") }
@@ -45,21 +43,6 @@ fun TransactionStatusScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
             text = "Check the status of M-Pesa transactions using transaction ID",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        
-        OutlinedTextField(
-            value = clientId,
-            onValueChange = { clientId = it },
-            label = { Text("Client ID") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        
-        OutlinedTextField(
-            value = clientSecret,
-            onValueChange = { clientSecret = it },
-            label = { Text("Client Secret") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
         )
         
         OutlinedTextField(
@@ -147,15 +130,13 @@ fun TransactionStatusScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
         
         Button(
             onClick = {
-                if (clientId.isNotBlank() && clientSecret.isNotBlank() && 
+                if (
                     initiator.isNotBlank() && securityCredential.isNotBlank() &&
                     commandID.isNotBlank() && transactionID.isNotBlank() &&
                     partyA.isNotBlank() && identifierType.isNotBlank() &&
                     resultURL.isNotBlank() && queueTimeOutURL.isNotBlank() &&
                     remarks.isNotBlank() && occasion.isNotBlank()) {
                     viewModel.queryTransactionStatus(
-                        clientId = clientId,
-                        clientSecret = clientSecret,
                         initiator = initiator,
                         securityCredential = securityCredential,
                         commandID = commandID,

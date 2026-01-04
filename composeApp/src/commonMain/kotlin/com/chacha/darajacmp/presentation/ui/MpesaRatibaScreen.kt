@@ -16,8 +16,6 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun MpesaRatibaScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
-    var clientId by remember { mutableStateOf("xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ") }
-    var clientSecret by remember { mutableStateOf("7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg") }
     var standingOrderName by remember { mutableStateOf("Test Standing Order") }
     var startDate by remember { mutableStateOf("20240905") }
     var endDate by remember { mutableStateOf("20230905") }
@@ -50,20 +48,6 @@ fun MpesaRatibaScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        OutlinedTextField(
-            value = clientId,
-            onValueChange = { clientId = it },
-            label = { Text("Client ID") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            value = clientSecret,
-            onValueChange = { clientSecret = it },
-            label = { Text("Client Secret") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation()
-        )
 
         OutlinedTextField(
             value = standingOrderName,
@@ -170,7 +154,7 @@ fun MpesaRatibaScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
 
         Button(
             onClick = {
-                if (clientId.isNotBlank() && clientSecret.isNotBlank() &&
+                if (
                     standingOrderName.isNotBlank() && startDate.isNotBlank() &&
                     endDate.isNotBlank() && businessShortCode.isNotBlank() &&
                     transactionType.isNotBlank() && receiverPartyIdentifierType.isNotBlank() &&
@@ -178,8 +162,6 @@ fun MpesaRatibaScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                     callBackURL.isNotBlank() && accountReference.isNotBlank() &&
                     transactionDesc.isNotBlank() && frequency.isNotBlank()) {
                     viewModel.processMpesaRatiba(
-                        clientId = clientId,
-                        clientSecret = clientSecret,
                         standingOrderName = standingOrderName,
                         startDate = startDate,
                         endDate = endDate,

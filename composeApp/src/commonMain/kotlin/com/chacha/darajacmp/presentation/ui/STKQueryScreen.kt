@@ -15,8 +15,6 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun STKQueryScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
-    var clientId by remember { mutableStateOf("xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ") }
-    var clientSecret by remember { mutableStateOf("7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg") }
     var businessShortCode by remember { mutableStateOf("174379") }
     var passKey by remember { mutableStateOf("bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919") }
     var checkoutRequestID by remember { mutableStateOf("") }
@@ -39,22 +37,7 @@ fun STKQueryScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        
-        OutlinedTextField(
-            value = clientId,
-            onValueChange = { clientId = it },
-            label = { Text("Client ID") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        
-        OutlinedTextField(
-            value = clientSecret,
-            onValueChange = { clientSecret = it },
-            label = { Text("Client Secret") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
-        )
-        
+
         OutlinedTextField(
             value = businessShortCode,
             onValueChange = { businessShortCode = it },
@@ -82,12 +65,10 @@ fun STKQueryScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
         
         Button(
             onClick = {
-                if (clientId.isNotBlank() && clientSecret.isNotBlank() && 
+                if (
                     businessShortCode.isNotBlank() && passKey.isNotBlank() &&
                     checkoutRequestID.isNotBlank()) {
                     viewModel.querySTKStatus(
-                        clientId = clientId,
-                        clientSecret = clientSecret,
                         businessShortCode = businessShortCode,
                         passKey = passKey,
                         checkoutRequestID = checkoutRequestID

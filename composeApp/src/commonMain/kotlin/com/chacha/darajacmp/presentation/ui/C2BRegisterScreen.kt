@@ -15,8 +15,6 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun C2BRegisterScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
-    var clientId by remember { mutableStateOf("xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ") }
-    var clientSecret by remember { mutableStateOf("7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg") }
     var shortCode by remember { mutableStateOf("174379") }
     var responseType by remember { mutableStateOf("Completed") }
     var confirmationURL by remember { mutableStateOf("https://your-callback-url.com/confirmation") }
@@ -40,21 +38,7 @@ fun C2BRegisterScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        
-        OutlinedTextField(
-            value = clientId,
-            onValueChange = { clientId = it },
-            label = { Text("Client ID") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        
-        OutlinedTextField(
-            value = clientSecret,
-            onValueChange = { clientSecret = it },
-            label = { Text("Client Secret") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
-        )
+
         
         OutlinedTextField(
             value = shortCode,
@@ -91,12 +75,10 @@ fun C2BRegisterScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
         
         Button(
             onClick = {
-                if (clientId.isNotBlank() && clientSecret.isNotBlank() && 
+                if (
                     shortCode.isNotBlank() && responseType.isNotBlank() &&
                     confirmationURL.isNotBlank() && validationURL.isNotBlank()) {
                     viewModel.registerC2BURL(
-                        clientId = clientId,
-                        clientSecret = clientSecret,
                         shortCode = shortCode,
                         responseType = responseType,
                         confirmationURL = confirmationURL,

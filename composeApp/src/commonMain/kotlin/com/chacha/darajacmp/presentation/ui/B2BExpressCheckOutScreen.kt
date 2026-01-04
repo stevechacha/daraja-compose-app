@@ -122,14 +122,11 @@ fun B2BExpressCheckOutScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
 
         Button(
             onClick = {
-                if (clientId.isNotBlank() && clientSecret.isNotBlank() &&
-                    primaryShortCode.isNotBlank() && receiverShortCode.isNotBlank() &&
+                if (primaryShortCode.isNotBlank() && receiverShortCode.isNotBlank() &&
                     amount.isNotBlank() && paymentRef.isNotBlank() &&
                     callbackUrl.isNotBlank() && partnerName.isNotBlank() &&
                     requestRefID.isNotBlank()) {
                     viewModel.processB2BExpressCheckOut(
-                        clientId = clientId,
-                        clientSecret = clientSecret,
                         primaryShortCode = primaryShortCode,
                         receiverShortCode = receiverShortCode,
                         amount = amount,
