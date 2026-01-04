@@ -11,39 +11,43 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chacha.darajacmp.di.appModule
+import com.chacha.darajacmp.di.dataModule
 import com.chacha.darajacmp.di.darajaModule
-import com.chacha.darajacmp.ui.AccountBalanceScreen
-import com.chacha.darajacmp.ui.B2BExpressCheckOutScreen
-import com.chacha.darajacmp.ui.B2CAccountTopUpScreen
-import com.chacha.darajacmp.ui.B2CScreen
-import com.chacha.darajacmp.ui.BillManagerScreen
-import com.chacha.darajacmp.ui.BusinessPayBillScreen
-import com.chacha.darajacmp.ui.BusinessBuyGoodsScreen
-import com.chacha.darajacmp.ui.C2BScreen
-import com.chacha.darajacmp.ui.C2BRegisterScreen
-import com.chacha.darajacmp.ui.MpesaRatibaScreen
-import com.chacha.darajacmp.ui.ReversalsScreen
-import com.chacha.darajacmp.ui.TaxRemittanceScreen
-import com.chacha.darajacmp.ui.TransactionStatusScreen
-import com.chacha.darajacmp.viewmodel.MpesaViewModel
-import com.chacha.darajacmp.ui.OtherOperationsScreen
-import com.chacha.darajacmp.ui.STKPushScreen
-import com.chacha.darajacmp.ui.STKQueryScreen
-import com.chacha.darajacmp.ui.DynamicQRScreen
-import com.chacha.darajacmp.viewmodel.NewMpesaViewModel
+import com.chacha.darajacmp.di.domainModule
+import com.chacha.darajacmp.di.presentationModule
+import com.chacha.darajacmp.presentation.ui.AccountBalanceScreen
+import com.chacha.darajacmp.presentation.ui.B2BExpressCheckOutScreen
+import com.chacha.darajacmp.presentation.ui.B2CAccountTopUpScreen
+import com.chacha.darajacmp.presentation.ui.B2CScreen
+import com.chacha.darajacmp.presentation.ui.BillManagerScreen
+import com.chacha.darajacmp.presentation.ui.BusinessPayBillScreen
+import com.chacha.darajacmp.presentation.ui.BusinessBuyGoodsScreen
+import com.chacha.darajacmp.presentation.ui.C2BScreen
+import com.chacha.darajacmp.presentation.ui.C2BRegisterScreen
+import com.chacha.darajacmp.presentation.ui.MpesaRatibaScreen
+import com.chacha.darajacmp.presentation.ui.ReversalsScreen
+import com.chacha.darajacmp.presentation.ui.TaxRemittanceScreen
+import com.chacha.darajacmp.presentation.ui.TransactionStatusScreen
+import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
+import com.chacha.darajacmp.presentation.ui.OtherOperationsScreen
+import com.chacha.darajacmp.presentation.ui.STKPushScreen
+import com.chacha.darajacmp.presentation.ui.STKQueryScreen
+import com.chacha.darajacmp.presentation.ui.DynamicQRScreen
 import daraja_compose_app.composeapp.generated.resources.Res
 import daraja_compose_app.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.KoinApplication
+import org.koin.dsl.module
 
 @Composable
 @Preview
 fun App() {
     KoinApplication(application = {
-        modules(listOf(appModule,darajaModule))
+        modules(listOf(appModule, darajaModule, dataModule, domainModule, presentationModule))
     }) {
 
         MaterialTheme {
@@ -54,9 +58,7 @@ fun App() {
 
 @Composable
 fun MpesaApp() {
-    val viewModel: MpesaViewModel = viewModel()
-    val newMpesaViewModel: NewMpesaViewModel = viewModel()
-    val uiStates by newMpesaViewModel.uiState.collectAsState()
+    val viewModel: MpesaViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
     var selectedTab by remember { mutableStateOf(0) }

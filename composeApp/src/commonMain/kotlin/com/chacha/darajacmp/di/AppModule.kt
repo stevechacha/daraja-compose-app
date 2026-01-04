@@ -1,6 +1,6 @@
 package com.chacha.darajacmp.di
 
-import com.chacha.darajacmp.network.DarajaApiCallService
+import com.chacha.darajacmp.data.network.DarajaApiCallService
 import com.chacha.darajacmp.utils.getHttpClientEngine
 import io.ktor.client.*
 import io.ktor.client.engine.*

@@ -59,8 +59,11 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.bundles.ktor.serialization)
 
-            implementation("io.insert-koin:koin-core:4.1.0")
-            implementation("io.insert-koin:koin-compose:4.1.0")
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
+            implementation("io.insert-koin:koin-compose")
+            implementation("io.insert-koin:koin-compose-viewmodel")
+            implementation("io.insert-koin:koin-compose-viewmodel-navigation")
 
         }
         commonTest.dependencies {

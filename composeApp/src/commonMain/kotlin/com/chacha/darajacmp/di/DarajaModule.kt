@@ -1,6 +1,6 @@
 package com.chacha.darajacmp.di
 
-import com.chacha.darajacmp.network.DarajaApiCallService
+import com.chacha.darajacmp.data.network.DarajaApiCallService
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 

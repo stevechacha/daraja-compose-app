@@ -1,8 +1,8 @@
 package com.chacha.darajacmp.utils
 
 import com.chacha.darajacmp.utils.DarajaConfig
-import com.chacha.darajacmp.network.AuthService
-import com.chacha.darajacmp.network.DarajaApiService
+import com.chacha.darajacmp.data.network.AuthService
+import com.chacha.darajacmp.data.network.DarajaApiService
 import kotlinx.datetime.Clock
 
 /**
