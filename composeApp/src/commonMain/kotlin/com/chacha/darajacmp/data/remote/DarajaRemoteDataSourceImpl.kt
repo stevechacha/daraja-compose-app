@@ -1,9 +1,9 @@
 package com.chacha.darajacmp.data.remote
 
 import com.chacha.darajacmp.domain.model.Result
-import com.chacha.darajacmp.data.network.AuthService
-import com.chacha.darajacmp.data.network.DarajaApiCallService
-import com.chacha.darajacmp.data.network.DarajaApiService
+import com.chacha.darajacmp.data.remote.AuthService
+import com.chacha.darajacmp.data.remote.DarajaApiCallService
+import com.chacha.darajacmp.data.remote.DarajaApiService
 import com.chacha.darajacmp.utils.DarajaResult
 
 class DarajaRemoteDataSourceImpl(

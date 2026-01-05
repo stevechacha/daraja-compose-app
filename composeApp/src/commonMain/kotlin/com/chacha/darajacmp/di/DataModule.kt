@@ -4,8 +4,8 @@ import com.chacha.darajacmp.data.remote.DarajaRemoteDataSource
 import com.chacha.darajacmp.data.remote.DarajaRemoteDataSourceImpl
 import com.chacha.darajacmp.data.repository.DarajaRepositoryImpl
 import com.chacha.darajacmp.domain.repository.DarajaRepository
-import com.chacha.darajacmp.data.network.AuthService
-import com.chacha.darajacmp.data.network.DarajaApiCallService
+import com.chacha.darajacmp.data.remote.AuthService
+import com.chacha.darajacmp.data.remote.DarajaApiCallService
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

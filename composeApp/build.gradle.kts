@@ -71,6 +71,9 @@ kotlin {
             implementation("io.insert-koin:koin-compose")
             implementation("io.insert-koin:koin-compose-viewmodel")
             implementation("io.insert-koin:koin-compose-viewmodel-navigation")
+            
+            implementation(libs.touchlab.kermit)
+
 
         }
         commonTest.dependencies {
@@ -144,6 +147,10 @@ tasks.register("generateDarajaConfig") {
         val passKey = project.findProperty("daraja.$environment.passkey") as String? ?: "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
         val testPhone = project.findProperty("daraja.sandbox.test.phone") as String? ?: "254708374149"
         
+        // Compute URLs directly to avoid string interpolation issues
+        val sandboxBaseUrl = "https://sandbox.safaricom.co.ke"
+        val productionBaseUrl = "https://api.safaricom.co.ke"
+        
         configFile.writeText("""
 package com.chacha.darajacmp.utils
 
@@ -158,36 +165,36 @@ package com.chacha.darajacmp.utils
 
 object DarajaConfig {
     // Sandbox URLs (for testing)
-    const val SANDBOX_BASE_URL = "https://sandbox.safaricom.co.ke"
-    const val SANDBOX_AUTH_URL = "\${'$'}SANDBOX_BASE_URL/oauth/v1/generate?grant_type=client_credentials"
-    const val SANDBOX_STK_PUSH_URL = "\${'$'}SANDBOX_BASE_URL/mpesa/stkpush/v1/processrequest"
-    const val SANDBOX_STK_QUERY_URL = "\${'$'}SANDBOX_BASE_URL/mpesa/stkpushquery/v1/query"
-    const val SANDBOX_C2B_REGISTER_URL = "\${'$'}SANDBOX_BASE_URL/mpesa/c2b/v1/registerurl"
-    const val SANDBOX_C2B_SIMULATE_URL = "\${'$'}SANDBOX_BASE_URL/mpesa/c2b/v1/simulate"
-    const val SANDBOX_B2C = "https://sandbox.safaricom.co.ke/mpesa/b2c/v3/paymentrequest"
-    const val SANDBOX_DYNAMIC_QR_CODE = "https://sandbox.safaricom.co.ke/mpesa/qrcode/v1/generate"
-    const val SANDBOX_ACCOUNT_BALANCE_URL = "\${'$'}SANDBOX_BASE_URL/mpesa/accountbalance/v1/query"
-    const val SANDBOX_TRANSACTION_STATUS_URL = "\${'$'}SANDBOX_BASE_URL/mpesa/transactionstatus/v1/query"
-    const val SANDBOX_REVERSAL_URL = "\${'$'}SANDBOX_BASE_URL/mpesa/reversal/v1/request"
-    const val SANDBOX_TAX_REMITTANCE = "\${'$'}SANDBOX_BASE_URL/mpesa/b2b/v1/remittax"
-    const val SANDBOX_BUSINESS_PAY_BILL = "https://sandbox.safaricom.co.ke/mpesa/b2b/v1/paymentrequest"
-    const val SANDBOX_BUSINESS_BUY_GOODS = "https://sandbox.safaricom.co.ke/mpesa/b2b/v1/paymentrequest"
-    const val SANDBOX_BILL_MANAGER = "https://api.safaricom.co.ke/v1/billmanager-invoice/optin"
-    const val SANDBOX_B2C_ACCOUNT_TOP_UP = "https://sandbox.safaricom.co.ke/mpesa/b2b/v1/paymentrequest"
-    const val SANDBOX_M_RATIBA = "https://sandbox.safaricom.co.ke/standingorder/v1/createStandingOrderExternal"
-    const val SANDBOX_B2B_EXPRESS_CHECKOUT = "https://sandbox.safaricom.co.ke/v1/ussdpush/get-msisdn"
+    const val SANDBOX_BASE_URL = "$sandboxBaseUrl"
+    const val SANDBOX_AUTH_URL = "$sandboxBaseUrl/oauth/v1/generate?grant_type=client_credentials"
+    const val SANDBOX_STK_PUSH_URL = "$sandboxBaseUrl/mpesa/stkpush/v1/processrequest"
+    const val SANDBOX_STK_QUERY_URL = "$sandboxBaseUrl/mpesa/stkpushquery/v1/query"
+    const val SANDBOX_C2B_REGISTER_URL = "$sandboxBaseUrl/mpesa/c2b/v1/registerurl"
+    const val SANDBOX_C2B_SIMULATE_URL = "$sandboxBaseUrl/mpesa/c2b/v1/simulate"
+    const val SANDBOX_B2C = "$sandboxBaseUrl/mpesa/b2c/v3/paymentrequest"
+    const val SANDBOX_DYNAMIC_QR_CODE = "$sandboxBaseUrl/mpesa/qrcode/v1/generate"
+    const val SANDBOX_ACCOUNT_BALANCE_URL = "$sandboxBaseUrl/mpesa/accountbalance/v1/query"
+    const val SANDBOX_TRANSACTION_STATUS_URL = "$sandboxBaseUrl/mpesa/transactionstatus/v1/query"
+    const val SANDBOX_REVERSAL_URL = "$sandboxBaseUrl/mpesa/reversal/v1/request"
+    const val SANDBOX_TAX_REMITTANCE = "$sandboxBaseUrl/mpesa/b2b/v1/remittax"
+    const val SANDBOX_BUSINESS_PAY_BILL = "$sandboxBaseUrl/mpesa/b2b/v1/paymentrequest"
+    const val SANDBOX_BUSINESS_BUY_GOODS = "$sandboxBaseUrl/mpesa/b2b/v1/paymentrequest"
+    const val SANDBOX_BILL_MANAGER = "$productionBaseUrl/v1/billmanager-invoice/optin"
+    const val SANDBOX_B2C_ACCOUNT_TOP_UP = "$sandboxBaseUrl/mpesa/b2b/v1/paymentrequest"
+    const val SANDBOX_M_RATIBA = "$sandboxBaseUrl/standingorder/v1/createStandingOrderExternal"
+    const val SANDBOX_B2B_EXPRESS_CHECKOUT = "$sandboxBaseUrl/v1/ussdpush/get-msisdn"
 
     // Production URLs (for live environment)
-    const val PRODUCTION_BASE_URL = "https://api.safaricom.co.ke"
-    const val PRODUCTION_AUTH_URL = "\${'$'}PRODUCTION_BASE_URL/oauth/v1/generate?grant_type=client_credentials"
-    const val PRODUCTION_STK_PUSH_URL = "\${'$'}PRODUCTION_BASE_URL/mpesa/stkpush/v1/processrequest"
-    const val PRODUCTION_STK_QUERY_URL = "\${'$'}PRODUCTION_BASE_URL/mpesa/stkpushquery/v1/query"
-    const val PRODUCTION_C2B_REGISTER_URL = "\${'$'}PRODUCTION_BASE_URL/mpesa/c2b/v1/registerurl"
-    const val PRODUCTION_C2B_SIMULATE_URL = "\${'$'}PRODUCTION_BASE_URL/mpesa/c2b/v1/simulate"
-    const val PRODUCTION_B2C_URL = "\${'$'}PRODUCTION_BASE_URL/mpesa/b2c/v1/paymentrequest"
-    const val PRODUCTION_ACCOUNT_BALANCE_URL = "\${'$'}PRODUCTION_BASE_URL/mpesa/accountbalance/v1/query"
-    const val PRODUCTION_TRANSACTION_STATUS_URL = "\${'$'}PRODUCTION_BASE_URL/mpesa/transactionstatus/v1/query"
-    const val PRODUCTION_REVERSAL_URL = "\${'$'}PRODUCTION_BASE_URL/mpesa/reversal/v1/request"
+    const val PRODUCTION_BASE_URL = "$productionBaseUrl"
+    const val PRODUCTION_AUTH_URL = "$productionBaseUrl/oauth/v1/generate?grant_type=client_credentials"
+    const val PRODUCTION_STK_PUSH_URL = "$productionBaseUrl/mpesa/stkpush/v1/processrequest"
+    const val PRODUCTION_STK_QUERY_URL = "$productionBaseUrl/mpesa/stkpushquery/v1/query"
+    const val PRODUCTION_C2B_REGISTER_URL = "$productionBaseUrl/mpesa/c2b/v1/registerurl"
+    const val PRODUCTION_C2B_SIMULATE_URL = "$productionBaseUrl/mpesa/c2b/v1/simulate"
+    const val PRODUCTION_B2C_URL = "$productionBaseUrl/mpesa/b2c/v1/paymentrequest"
+    const val PRODUCTION_ACCOUNT_BALANCE_URL = "$productionBaseUrl/mpesa/accountbalance/v1/query"
+    const val PRODUCTION_TRANSACTION_STATUS_URL = "$productionBaseUrl/mpesa/transactionstatus/v1/query"
+    const val PRODUCTION_REVERSAL_URL = "$productionBaseUrl/mpesa/reversal/v1/request"
 
     // Common M-Pesa Command IDs
     object CommandIDs {
@@ -304,12 +311,34 @@ fun readProperty(propertyName: String, defaultValue: String = ""): String {
     val properties = Properties()
     
     if (localProperties.exists()) {
-        localProperties.inputStream().use { properties.load(it) }
+        try {
+            localProperties.inputStream().use { properties.load(it) }
+            val value = properties.getProperty(propertyName)
+            if (value != null && value.isNotBlank()) {
+                println("✅ Found $propertyName in local.properties (length: ${value.length})")
+                return value
+            } else {
+                println("⚠️ $propertyName in local.properties is empty, using default")
+            }
+        } catch (e: Exception) {
+            println("⚠️ Error reading local.properties: ${e.message}")
+        }
+    } else {
+        println("⚠️ local.properties not found, using default for $propertyName")
     }
     
-    return properties.getProperty(propertyName)
-        ?: project.findProperty(propertyName) as String?
-        ?: defaultValue
+    // Try gradle.properties
+    val gradleValue = project.findProperty(propertyName) as String?
+    if (gradleValue != null && gradleValue.isNotBlank()) {
+        println("✅ Found $propertyName in gradle.properties")
+        return gradleValue
+    }
+    
+    // Use default
+    if (defaultValue.isNotBlank()) {
+        println("ℹ️ Using default value for $propertyName")
+    }
+    return defaultValue
 }
 
 // BuildKonfig configuration for secure credentials
@@ -319,16 +348,19 @@ buildkonfig {
     // Expose fields as public (not internal) so they can be accessed from common code
     exposeObjectWithName = "BuildKonfig"
     
+    // Default configs with fallback values (for desktop builds and other variants)
     defaultConfigs {
+        val clientId = readProperty("daraja.client.id", "xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ")
+        val clientSecret = readProperty("daraja.client.secret", "7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg")
         buildConfigField(
             type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
             name = "CLIENT_ID",
-            value = "\"\""
+            value = "\"$clientId\""
         )
         buildConfigField(
             type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
             name = "CLIENT_SECRET",
-            value = "\"\""
+            value = "\"$clientSecret\""
         )
     }
     

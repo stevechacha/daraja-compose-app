@@ -1,4 +1,4 @@
-package com.chacha.darajacmp.data.network
+package com.chacha.darajacmp.data.remote
 
 import com.chacha.darajacmp.data.dto.AuthResponse
 import com.chacha.darajacmp.data.dto.request.*
@@ -63,16 +63,14 @@ class DarajaApiCallService(
                     val accessToken = tokenResult.data.accessToken
 
                     val response = httpClient.post(DarajaConfig.SANDBOX_STK_PUSH_URL) {
-            headers {
-                append(HttpHeaders.Authorization, "Bearer $accessToken")
+                        headers {
+                            append(HttpHeaders.Authorization, "Bearer $accessToken")
                             append(HttpHeaders.ContentType, "application/json")
                         }
                         setBody(stkPushRequest)
                     }
                     response.body<STKPushResponse>()
                 }
-
-
                 is DarajaResult.Error -> {
                     throw Exception("Failed to get access token: ${tokenResult.error}")
                 }
@@ -92,7 +90,7 @@ class DarajaApiCallService(
                     return@dataResultSafeApiCall httpClient.post(urlString = DarajaConfig.SANDBOX_STK_PUSH_URL) {
                         headers { append(HttpHeaders.Authorization, "Bearer $accessToken") }
                         setBody(queryMpesaExpressRequest)
-        }.body()
+                    }.body()
                 }
             }
         }
@@ -427,3 +425,4 @@ class DarajaApiCallService(
         }
     }
 }
+

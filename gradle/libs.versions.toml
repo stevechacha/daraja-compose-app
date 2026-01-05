@@ -20,6 +20,7 @@ kotlinx-datetime = "0.6.1"
 kotlinx-serialization = "1.7.3"
 ktor = "3.3.0"
 koin-bom = "4.1.1"  # Stable version
+kermit = "2.0.6"
 
 [libraries]
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
@@ -83,6 +84,9 @@ ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 
 # Kotlinx DateTime
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+
+# Kermit Logging
+touchlab-kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
 [bundles]
 ktor-client = ["ktor-client-core", "ktor-client-cio","ktor-client-content-negotiation","ktor-client-logging", "ktor-client-json"]

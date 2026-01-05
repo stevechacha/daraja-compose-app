@@ -1,4 +1,4 @@
-package com.chacha.darajacmp.data.network
+package com.chacha.darajacmp.data.remote
 
 import com.chacha.darajacmp.utils.DarajaResult
 import io.ktor.client.plugins.*
@@ -345,3 +345,4 @@ class DarajaException(
             DarajaException(message, errorCode)
     }
     }
+
