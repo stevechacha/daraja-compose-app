@@ -21,6 +21,8 @@ import io.ktor.util.*
 
 @Composable
 fun DynamicQRScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
+    var clientId by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_ID) }
+    var clientSecret by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_SECRET) }
     var merchantName by remember { mutableStateOf("Test Merchant") }
     var refNo by remember { mutableStateOf("REF${kotlinx.datetime.Clock.System.now().epochSeconds}") }
     var amount by remember { mutableStateOf("100") }
@@ -108,7 +110,9 @@ fun DynamicQRScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                         amount = amount.toIntOrNull() ?: 0,
                         trxCode = trxCode,
                         cpi = cpi,
-                        size = size
+                        size = size,
+                        clientId = clientId,
+                        clientSecret = clientSecret
                     )
                 }
             },

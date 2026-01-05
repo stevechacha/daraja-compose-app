@@ -15,6 +15,8 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun B2CScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
+    var clientId by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_ID) }
+    var clientSecret by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_SECRET) }
     var initiatorName by remember { mutableStateOf("testapi") }
     var securityCredential by remember { mutableStateOf("Safaricom999!*!") }
     var commandID by remember { mutableStateOf("BusinessPayment") }
@@ -147,7 +149,9 @@ fun B2CScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                         remarks = remarks,
                         queueTimeOutURL = queueTimeOutURL,
                         resultURL = resultURL,
-                        occasion = occasion
+                        occasion = occasion,
+                        clientId = clientId,
+                        clientSecret = clientSecret
                     )
                 }
             },

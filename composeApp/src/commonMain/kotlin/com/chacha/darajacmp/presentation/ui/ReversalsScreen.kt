@@ -15,6 +15,8 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun ReversalsScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
+    var clientId by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_ID) }
+    var clientSecret by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_SECRET) }
     var initiator by remember { mutableStateOf("TestInit610") }
     var securityCredential by remember { mutableStateOf("[encrypted password]") }
     var commandID by remember { mutableStateOf("TransactionReversal") }
@@ -158,7 +160,9 @@ fun ReversalsScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                         resultURL = resultURL,
                         queueTimeOutURL = queueTimeOutURL,
                         remarks = remarks,
-                        occasion = occasion
+                        occasion = occasion,
+                        clientId = clientId,
+                        clientSecret = clientSecret
                     )
                 }
             },

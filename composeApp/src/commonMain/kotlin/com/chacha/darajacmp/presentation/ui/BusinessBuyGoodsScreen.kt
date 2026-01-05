@@ -16,6 +16,8 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun BusinessBuyGoodsScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
+    var clientId by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_ID) }
+    var clientSecret by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_SECRET) }
     var initiator by remember { mutableStateOf("testapi") }
     var securityCredential by remember { mutableStateOf("safaricom123!@#") } // Replace with actual encrypted credential
     var commandID by remember { mutableStateOf("BusinessBuyGoods") }
@@ -192,7 +194,9 @@ fun BusinessBuyGoodsScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                         remarks = remarks,
                         queueTimeOutURL = queueTimeOutURL,
                         resultURL = resultURL,
-                        occasion = occasion
+                        occasion = occasion,
+                        clientId = clientId,
+                        clientSecret = clientSecret
                     )
                 }
             },

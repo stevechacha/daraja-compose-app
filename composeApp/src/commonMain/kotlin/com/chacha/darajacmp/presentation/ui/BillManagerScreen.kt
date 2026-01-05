@@ -16,6 +16,8 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun BillManagerScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
+    var clientId by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_ID) }
+    var clientSecret by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_SECRET) }
     var shortcode by remember { mutableStateOf("718003") }
     var email by remember { mutableStateOf("youremail@gmail.com") }
     var officialContact by remember { mutableStateOf("0710XXXXXX") }
@@ -107,7 +109,9 @@ fun BillManagerScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                         officialContact = officialContact,
                         sendReminders = sendReminders,
                         logo = logo,
-                        callbackurl = callbackurl
+                        callbackurl = callbackurl,
+                        clientId = clientId,
+                        clientSecret = clientSecret
                     )
                 }
             },

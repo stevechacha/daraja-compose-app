@@ -16,8 +16,8 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun B2BExpressCheckOutScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
-    var clientId by remember { mutableStateOf("xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ") }
-    var clientSecret by remember { mutableStateOf("7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg") }
+    var clientId by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_ID) }
+    var clientSecret by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_SECRET) }
     var primaryShortCode by remember { mutableStateOf("000001") }
     var receiverShortCode by remember { mutableStateOf("000002") }
     var amount by remember { mutableStateOf("100") }
@@ -133,7 +133,9 @@ fun B2BExpressCheckOutScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                         paymentRef = paymentRef,
                         callbackUrl = callbackUrl,
                         partnerName = partnerName,
-                        requestRefID = requestRefID
+                        requestRefID = requestRefID,
+                        clientId = clientId,
+                        clientSecret = clientSecret
                     )
                 }
             },

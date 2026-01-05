@@ -15,8 +15,8 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun C2BScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
-    var clientId by remember { mutableStateOf(DarajaConfig.DarajaCredentials.CLIENT_ID) }
-    var clientSecret by remember { mutableStateOf(DarajaConfig.DarajaCredentials.CLIENT_SECRET) }
+    var clientId by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_ID) }
+    var clientSecret by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_SECRET) }
     var shortCode by remember { mutableStateOf(DarajaConfig.DarajaCredentials.BUSINESS_SHORT_CODE) }
     var confirmationURL by remember { mutableStateOf("https://your-confirmation-url.com") }
     var validationURL by remember { mutableStateOf("https://your-validation-url.com") }

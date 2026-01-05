@@ -16,6 +16,8 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun MpesaRatibaScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
+    var clientId by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_ID) }
+    var clientSecret by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_SECRET) }
     var standingOrderName by remember { mutableStateOf("Test Standing Order") }
     var startDate by remember { mutableStateOf("20240905") }
     var endDate by remember { mutableStateOf("20230905") }
@@ -173,7 +175,9 @@ fun MpesaRatibaScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                         callBackURL = callBackURL,
                         accountReference = accountReference,
                         transactionDesc = transactionDesc,
-                        frequency = frequency
+                        frequency = frequency,
+                        clientId = clientId,
+                        clientSecret = clientSecret
                     )
                 }
             },

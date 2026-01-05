@@ -1,5 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,6 +9,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.buildkonfig)
 }
 
 kotlin {
@@ -38,6 +40,7 @@ kotlin {
     sourceSets {
         commonMain {
             kotlin.srcDir("build/generated/kotlin")
+            kotlin.srcDir("build/buildkonfig/commonMain")
         }
         
         androidMain.dependencies {
@@ -293,6 +296,71 @@ tasks.named("compileKotlinMetadata") {
 // Run for Android compilation tasks
 tasks.matching { it.name.startsWith("compile") && it.name.contains("Kotlin") }.configureEach {
     dependsOn("generateDarajaConfig")
+}
+
+// Helper function to read properties from local.properties or gradle.properties
+fun readProperty(propertyName: String, defaultValue: String = ""): String {
+    val localProperties = rootProject.file("local.properties")
+    val properties = Properties()
+    
+    if (localProperties.exists()) {
+        localProperties.inputStream().use { properties.load(it) }
+    }
+    
+    return properties.getProperty(propertyName)
+        ?: project.findProperty(propertyName) as String?
+        ?: defaultValue
+}
+
+// BuildKonfig configuration for secure credentials
+buildkonfig {
+    packageName = "com.chacha.darajacmp"
+    
+    // Expose fields as public (not internal) so they can be accessed from common code
+    exposeObjectWithName = "BuildKonfig"
+    
+    defaultConfigs {
+        buildConfigField(
+            type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            name = "CLIENT_ID",
+            value = "\"\""
+        )
+        buildConfigField(
+            type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            name = "CLIENT_SECRET",
+            value = "\"\""
+        )
+    }
+    
+    defaultConfigs("debug") {
+        val clientId = readProperty("daraja.client.id", "xkS5JzqHgNItCXl29G9PWqdQqAH5Tb2cVxU1pi83GFHHtGSZ")
+        val clientSecret = readProperty("daraja.client.secret", "7Xo6rVHVdQxXfnU8sSR77Af0ibU2RaPJGXAhouaGHA3dnuq1e1seZKSt5b25bOpg")
+        buildConfigField(
+            type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            name = "CLIENT_ID",
+            value = "\"$clientId\""
+        )
+        buildConfigField(
+            type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            name = "CLIENT_SECRET",
+            value = "\"$clientSecret\""
+        )
+    }
+    
+    defaultConfigs("release") {
+        val clientId = readProperty("daraja.client.id", "")
+        val clientSecret = readProperty("daraja.client.secret", "")
+        buildConfigField(
+            type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            name = "CLIENT_ID",
+            value = "\"$clientId\""
+        )
+        buildConfigField(
+            type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            name = "CLIENT_SECRET",
+            value = "\"$clientSecret\""
+        )
+    }
 }
 
 compose.desktop {

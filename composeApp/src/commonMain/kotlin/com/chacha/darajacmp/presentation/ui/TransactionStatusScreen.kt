@@ -15,6 +15,8 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun TransactionStatusScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
+    var clientId by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_ID) }
+    var clientSecret by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_SECRET) }
     var initiator by remember { mutableStateOf("testapi") }
     var securityCredential by remember { mutableStateOf("your-encrypted-security-credential") }
     var commandID by remember { mutableStateOf("TransactionStatusQuery") }
@@ -146,7 +148,9 @@ fun TransactionStatusScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                         resultURL = resultURL,
                         queueTimeOutURL = queueTimeOutURL,
                         remarks = remarks,
-                        occasion = occasion
+                        occasion = occasion,
+                        clientId = clientId,
+                        clientSecret = clientSecret
                     )
                 }
             },

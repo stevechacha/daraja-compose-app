@@ -15,6 +15,8 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun C2BRegisterScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
+    var clientId by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_ID) }
+    var clientSecret by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_SECRET) }
     var shortCode by remember { mutableStateOf("174379") }
     var responseType by remember { mutableStateOf("Completed") }
     var confirmationURL by remember { mutableStateOf("https://your-callback-url.com/confirmation") }
@@ -82,7 +84,9 @@ fun C2BRegisterScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                         shortCode = shortCode,
                         responseType = responseType,
                         confirmationURL = confirmationURL,
-                        validationURL = validationURL
+                        validationURL = validationURL,
+                        clientId = clientId,
+                        clientSecret = clientSecret
                     )
                 }
             },

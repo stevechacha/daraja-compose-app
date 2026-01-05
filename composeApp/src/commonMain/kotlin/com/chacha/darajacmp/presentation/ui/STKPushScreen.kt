@@ -19,8 +19,8 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun STKPushScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
-    var clientId by remember { mutableStateOf(DarajaConfig.DarajaCredentials.CLIENT_ID) }
-    var clientSecret by remember { mutableStateOf(DarajaConfig.DarajaCredentials.CLIENT_SECRET) }
+    var clientId by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_ID) }
+    var clientSecret by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_SECRET) }
     var businessShortCode by remember { mutableStateOf(DarajaConfig.DarajaCredentials.BUSINESS_SHORT_CODE) }
     var passKey by remember { mutableStateOf(DarajaConfig.DarajaCredentials.PASS_KEY) }
     var amount by remember { mutableStateOf("100") }

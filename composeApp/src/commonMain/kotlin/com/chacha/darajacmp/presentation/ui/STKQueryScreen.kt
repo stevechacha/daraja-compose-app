@@ -15,6 +15,8 @@ import com.chacha.darajacmp.presentation.viewmodel.MpesaViewModel
 
 @Composable
 fun STKQueryScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
+    var clientId by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_ID) }
+    var clientSecret by remember { mutableStateOf(com.chacha.darajacmp.BuildKonfig.CLIENT_SECRET) }
     var businessShortCode by remember { mutableStateOf("174379") }
     var passKey by remember { mutableStateOf("bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919") }
     var checkoutRequestID by remember { mutableStateOf("") }
@@ -71,7 +73,9 @@ fun STKQueryScreen(viewModel: MpesaViewModel, uiState: MpesaUiState) {
                     viewModel.querySTKStatus(
                         businessShortCode = businessShortCode,
                         passKey = passKey,
-                        checkoutRequestID = checkoutRequestID
+                        checkoutRequestID = checkoutRequestID,
+                        clientId = clientId,
+                        clientSecret = clientSecret
                     )
                 }
             },
